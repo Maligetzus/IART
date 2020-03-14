@@ -49,7 +49,10 @@ def num_empty_fields_around_neutron(game):
 
 
 def odd(game):
-    return num_empty_fields_around_neutron(game) % 2
+    if(num_empty_fields_around_neutron(game) % 2 == 0):
+        return -1
+    else:
+        return 1
 
 
 def victory_player(game):
@@ -58,9 +61,9 @@ def victory_player(game):
 
 def victory_opponent(game):
     if game.curr_player == "Black":
-        return __neutron_to("White", game)
+        return __victory("White", game)
     elif game.curr_player == "White":
-        return __neutron_to("Black", game)
+        return __victory("Black", game)
 
 
 def __num_empty_tiles(player, game):
@@ -76,7 +79,7 @@ def __num_empty_tiles(player, game):
 
     return counter
 
-
+## TODO: have to fix this
 def __neutron_to(player, game):
     if player == "Black":
         for tile in game.state[1]:

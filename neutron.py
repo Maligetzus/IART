@@ -29,7 +29,7 @@ class Neutron:
                     row.append("0")
             state.append(row)
 
-        return Neutron(size, state)
+        return Neutron(state, size)
 
     def run(self):
         winner = None
