@@ -11,6 +11,13 @@ class Neutron:
         self.state = state
         self.neutron_position = size / 2, size / 2
 
+    def __init__(self, size, curr_player, turn, state, neutron_position):
+        self.size = size
+        self.curr_player = curr_player
+        self.turn = turn
+        self.state = state
+        self.neutron_position = neutron_position
+
     def start(self, starting_player=Player.White):
         """
         Initializes the game.
@@ -71,6 +78,28 @@ class Neutron:
             self.turn = Turn.Pawn
 
         return True
+
+    def hypothetical_move_piece(self, origin_x, origin_y, destination_x, destination_y):
+
+        game = Neutron(self.size, self.curr_player, self.turn, self.state, self.neutron_position)
+
+        if not game.can_move(origin_x, origin_y, destination_x, destination_y):
+            return False
+
+        if game.state[origin_x][origin_y] == 'N':
+            game.neutron_position = destination_x, destination_y
+
+        game.state[origin_x][origin_y], game.state[destination_x][destination_y] = \
+            game.state[destination_x][destination_y], game.state[origin_x][origin_y]
+
+        if game.turn == Turn.Pawn:
+            game.curr_player = Player.White if game.curr_player != Player.White else Player.Black
+
+            game.turn = Turn.Neutron
+        else:
+            game.turn = Turn.Pawn
+
+        return game
 
     def can_move(self, origin_x, origin_y, destination_x, destination_y):
         if (origin_x < 0 or origin_x >= self.size

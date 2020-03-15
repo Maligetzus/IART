@@ -7,5 +7,5 @@ class Node:
 
 
 def minimax(game):
-    return
 
+    return
