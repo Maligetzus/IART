@@ -10,6 +10,24 @@ class Turn(enum.Enum):
     Pawn = "Pawn"
 
 
+class Direction(enum.Enum):
+    Up = 0
+    Down = 1
+    Left = 2
+    Right = 3
+    LeftUp = 4
+    RightUp = 5
+    LeftDown = 6
+    RightDown = 7
+
+
+class Tile(enum.Enum):
+    Empty = 'E'
+    Black = 'B'
+    White = 'W'
+    Neutron = 'N'
+
+
 def get_score(curr_player, state, neutron_position):
     return 1000 + 10 * num_empty_tiles_player(curr_player, state) - 10 * num_empty_tiles_opponent(curr_player, state) +\
            200 * neutron_to_player(curr_player, state, neutron_position) - 200 * neutron_to_opponent(curr_player, state, neutron_position) + 10 * odd(state, neutron_position) *\
@@ -47,21 +65,21 @@ def num_empty_fields_around_neutron(state, neutron_position):
     if y == 0:
         left = False
 
-    if left and up and state[x - 1][y - 1] == '0':
+    if left and up and state[x - 1][y - 1] == Tile.Empty:
         counter += 1
-    if up and state[x - 1][y] == '0':
+    if up and state[x - 1][y] == Tile.Empty:
         counter += 1
-    if up and right and state[x - 1][y + 1] == '0':
+    if up and right and state[x - 1][y + 1] == Tile.Empty:
         counter += 1
-    if left and state[x][y - 1] == '0':
+    if left and state[x][y - 1] == Tile.Empty:
         counter += 1
-    if right and state[x][y + 1] == '0':
+    if right and state[x][y + 1] == Tile.Empty:
         counter += 1
-    if down and left and state[x + 1][y - 1] == '0':
+    if down and left and state[x + 1][y - 1] == Tile.Empty:
         counter += 1
-    if down and state[x + 1][y] == '0':
+    if down and state[x + 1][y] == Tile.Empty:
         counter += 1
-    if down and right and state[x + 1][y + 1] == '0':
+    if down and right and state[x + 1][y + 1] == Tile.Empty:
         counter += 1
 
     return counter
@@ -86,11 +104,11 @@ def __num_empty_tiles(player, state):
     counter = 0
     if player == Player.Black:
         for tile in state[0]:
-            if tile == '0':
+            if tile == Tile.Empty:
                 counter += 1
     else:
         for tile in state[len(state) - 1]:
-            if tile == '0':
+            if tile == Tile.Empty:
                 counter += 1
 
     return counter
@@ -115,15 +133,15 @@ def __neutron_to(player, state, neutron_position):
 
     for i in range(1, diff_x + 1):
         if up:
-            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y] != "0":
+            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y] != Tile.Empty:
                 up = False
         
         if diag_left:
-            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y - i] != "0":
+            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y - i] != Tile.Empty:
                 diag_left = False
 
         if diag_right:
-            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y + i] != "0":
+            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y + i] != Tile.Empty:
                 diag_right = False
             
         if(not up and not diag_left and not diag_right):
@@ -144,10 +162,10 @@ def __neutron_to(player, state, neutron_position):
 def victory(player, state):
     if player == Player.Black:
         for tile in state[0]:
-            if tile == 'N':
+            if tile == Tile.Neutron:
                 return 1
     elif player == Player.White:
         for tile in state[len(state) - 1]:
-            if tile == 'N':
+            if tile == Tile.Neutron:
                 return 1
     return 0

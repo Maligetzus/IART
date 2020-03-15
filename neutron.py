@@ -1,5 +1,5 @@
 import neutron_util as nutils
-from neutron_util import Player, Turn
+from neutron_util import Player, Turn, Direction, Tile
 import copy
 
 class Neutron:
@@ -29,13 +29,13 @@ class Neutron:
 
             for j in range(0, self.size):
                 if i == 0:
-                    row.append("B")
+                    row.append(Tile.Black)
                 elif i == int(self.size / 2) and j == int(self.size / 2):
-                    row.append("N")
+                    row.append(Tile.Neutron)
                 elif i == self.size - 1:
-                    row.append("W")
+                    row.append(Tile.White)
                 else:
-                    row.append("0")
+                    row.append(Tile.Empty)
 
             self.state.append(row)
 
@@ -54,22 +54,24 @@ class Neutron:
         else:
             return False, None
 
-    def move_piece(self, origin_x, origin_y, destination_x, destination_y):
-        return self.__move_piece(self, origin_x, origin_y, destination_x, destination_y)
+    def move_piece(self, origin_x, origin_y, direction):
+        return self.__move_piece(self, origin_x, origin_y, direction)
 
-    def hypothetical_move_piece(self, origin_x, origin_y, destination_x, destination_y):
+    def hypothetical_move_piece(self, origin_x, origin_y, direction):
         game = Neutron(self.size, self.curr_player, self.turn, copy.deepcopy(self.state), self.neutron_position)
         
-        success = self.__move_piece(game, origin_x, origin_y, destination_x, destination_y)
+        success = self.__move_piece(game, origin_x, origin_y, direction)
 
         return success, game
 
     @staticmethod
-    def __move_piece(self, origin_x, origin_y, destination_x, destination_y):
-        if not self.can_move(origin_x, origin_y, destination_x, destination_y):
+    def __move_piece(self, origin_x, origin_y, direction):
+        valid, destination_x, destination_y = self.can_move(origin_x, origin_y, direction)
+        
+        if not valid:
             return False
 
-        if self.state[origin_x][origin_y] == 'N':
+        if self.state[origin_x][origin_y] == Tile.Neutron:
             self.neutron_position = destination_x, destination_y
 
         self.state[origin_x][origin_y], self.state[destination_x][destination_y] = \
@@ -84,44 +86,34 @@ class Neutron:
 
         return True
 
-    def can_move(self, origin_x, origin_y, destination_x, destination_y):
+    def can_move(self, origin_x, origin_y, direction):
         if (origin_x < 0 or origin_x >= self.size
-                or origin_y < 0 or origin_y >= self.size
-                or destination_x < 0 or destination_x >= self.size
-                or destination_y < 0 or destination_y >= self.size):
-            return False
+                or origin_y < 0 or origin_y >= self.size):
+            return False, origin_x, origin_y
 
-        if origin_x == destination_x and origin_y == destination_y:
-            return False
+        if self.turn == Turn.Neutron and self.state[origin_x][origin_y] != Tile.Neutron:
+            return False, origin_x, origin_y
 
-        if self.turn == Turn.Neutron and self.state[origin_x][origin_y] != "N":
-            return False
+        if self.turn == Turn.Pawn and self.curr_player == Player.White and self.state[origin_x][origin_y] != Tile.White:
+            return False, origin_x, origin_y
 
-        if self.turn == Turn.Pawn and self.curr_player == Player.White and self.state[origin_x][origin_y] != "W":
-            return False
+        if self.turn == Turn.Pawn and self.curr_player == Player.Black and self.state[origin_x][origin_y] != Tile.Black:
+            return False, origin_x, origin_y
 
-        if self.turn == Turn.Pawn and self.curr_player == Player.Black and self.state[origin_x][origin_y] != "B":
-            return False
+        move_x = 0
+        move_y = 0
 
-        if self.state[destination_x][destination_y] != "0":
-            return False
+        if(direction == Direction.Down or direction == Direction.LeftDown or direction == Direction.RightDown):
+            move_x = 1
+        
+        if(direction == Direction.Up or direction == Direction.LeftUp or direction == Direction.RightUp):
+            move_x = -1
 
-        diff_x = abs(destination_x - origin_x)
-        diff_y = abs(destination_y - origin_y)
-
-        if (not (diff_x == diff_y and diff_x != 0
-                 or diff_x == 0
-                 or diff_y == 0)):
-            return False
-
-        forwards_x = True
-        forwards_y = True
-
-        if destination_x < origin_x:
-            forwards_x = False
-
-        if destination_y < origin_y:
-            forwards_y = False
+        if(direction == Direction.Right or direction == Direction.RightUp or direction == Direction.RightDown):
+            move_y = 1
+        
+        if(direction == Direction.Left or direction == Direction.LeftUp or direction == Direction.LeftDown):
+            move_y = -1
 
         aux_x = origin_x
         next_x = origin_x
@@ -134,28 +126,19 @@ class Neutron:
             aux_x = next_x
             aux_y = next_y
 
-            if diff_x != 0:
-                if forwards_x:
-                    next_x = aux_x + 1
-                else:
-                    next_x = aux_x - 1
-
-            if diff_y != 0:
-                if forwards_y:
-                    next_y = aux_y + 1
-                else:
-                    next_y = aux_y - 1
+            next_x = aux_x + move_x
+            next_y = aux_y + move_y
 
             if (next_x < 0 or next_x >= self.size
                     or next_y < 0 or next_y >= self.size):
                 hit = True
-            elif self.state[next_x][next_y] != "0":
+            elif self.state[next_x][next_y] != Tile.Empty:
                 hit = True
 
-        if aux_x != destination_x or aux_y != destination_y:
-            return False
+        if(aux_x == origin_x and aux_y == origin_y):
+            return False, origin_x, origin_y
 
-        return True
+        return True, aux_x, aux_y
 
     def draw_board(self):
 
@@ -170,7 +153,7 @@ class Neutron:
             print(chr(65 + i), end=" ")
 
             for j in range(0, len(self.state[i])):
-                print(self.state[i][j], end=" ")
+                print(self.state[i][j].value, end=" ")
 
             print("\n", end="")
 
