@@ -1,12 +1,15 @@
 import enum
 
+
 class Player(enum.Enum):
     White = "White"
     Black = "Black"
 
+
 class Turn(enum.Enum):
     Neutron = "Neutron"
     Pawn = "Pawn"
+
 
 def get_neutron_position(state):
     x = -1
@@ -29,10 +32,12 @@ def get_neutron_position(state):
 
     return x, y
 
+
 def get_score(game):
     return 1000 + 10 * num_empty_tiles_player(game) - 10 * num_empty_tiles_opponent(game) +\
            200 * neutron_to_player(game) - 200 * neutron_to_opponent(game) + 10 * odd(game) *\
-           (8 - num_empty_fields_around_neutron(game.state)) + 500 * victory_player(game.curr_player, game.state) - 500 * victory_opponent(game.curr_player, game.state)
+           (8 - num_empty_fields_around_neutron(game.state)) + 500 * victory_player(game.curr_player, game.state) - 500\
+           * victory_opponent(game.curr_player, game.state)
 
 
 def num_empty_tiles_player(game):
@@ -67,13 +72,13 @@ def num_empty_fields_around_neutron(state):
     up = True
     down = True
 
-    if(x == len(state) - 1):
+    if x == len(state) - 1:
         down = False
-    if(x == 0):
+    if x == 0:
         up = False
-    if(y == len(state) - 1):
+    if y == len(state) - 1:
         right = False
-    if(y == 0):
+    if y == 0:
         left = False
 
     if left and up and state[x - 1][y - 1] == '0':
@@ -97,7 +102,7 @@ def num_empty_fields_around_neutron(state):
 
 
 def odd(game):
-    if(num_empty_fields_around_neutron(game) % 2 == 0):
+    if num_empty_fields_around_neutron(game) % 2 == 0:
         return -1
     else:
         return 1
@@ -127,17 +132,18 @@ def __num_empty_tiles(player, game):
 
     return counter
 
-## TODO: have to fix this
+
 def __neutron_to(player, game):
+    neutron_x, neutron_y = game.neutron_position
     if player == "Black":
-        for tile in game.state[1]:
-            if tile == 'N':
-                return 1
+        for i in range(0, neutron_x):
+            if game.state[i][neutron_y] != 'N':
+                return 0
     elif player == "White":
-        for tile in game.state[game.size - 2]:
-            if tile == 'N':
-                return 1
-    return 0
+        for i in range(neutron_x, game.size):
+            if game.state[i][neutron_y] != 'N':
+                return 0
+    return 1
 
 
 def victory(player, state):

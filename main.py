@@ -9,7 +9,7 @@ def main():
 
     finished, winner = game.has_finished()
 
-    while(not finished):
+    while not finished:
         game.draw_board()
 
         print(game.curr_player.value + " player, play " + game.turn.value + " (ex.: E1 B1):")
@@ -29,7 +29,7 @@ def main():
 
                 success = game.move_piece(origin_x, origin_y, destination_x, destination_y)
 
-            if(not success):
+            if not success:
                 print("Bad input!\n")
 
         finished, winner = game.has_finished()

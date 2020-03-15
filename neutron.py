@@ -1,6 +1,7 @@
 import neutron_util as nutils
 from neutron_util import Player, Turn
 
+
 class Neutron:
 
     def __init__(self, size, curr_player=Player.White, turn=Turn.Neutron, state=None):
@@ -8,13 +9,14 @@ class Neutron:
         self.turn = turn
         self.curr_player = curr_player
         self.state = state
+        self.neutron_position = size / 2, size / 2
 
     def start(self, starting_player=Player.White):
         """
         Initializes the game.
         """
 
-        if(self.size < 3 or self.size % 2 == 0):
+        if self.size < 3 or self.size % 2 == 0:
             return False, "Board length has to be an odd number bigger than 2"
 
         self.curr_player = starting_player
@@ -52,10 +54,14 @@ class Neutron:
             return False, None
 
     def move_piece(self, origin_x, origin_y, destination_x, destination_y):
-        if(not self.can_move(origin_x, origin_y, destination_x, destination_y)):
+        if not self.can_move(origin_x, origin_y, destination_x, destination_y):
             return False
 
-        self.state[origin_x][origin_y], self.state[destination_x][destination_y] = self.state[destination_x][destination_y], self.state[origin_x][origin_y]
+        if self.state[origin_x][origin_y] == 'N':
+            self.neutron_position = destination_x, destination_y
+
+        self.state[origin_x][origin_y], self.state[destination_x][destination_y] = \
+            self.state[destination_x][destination_y], self.state[origin_x][origin_y]
 
         if self.turn == Turn.Pawn:
             self.curr_player = Player.White if self.curr_player != Player.White else Player.Black
@@ -68,12 +74,12 @@ class Neutron:
 
     def can_move(self, origin_x, origin_y, destination_x, destination_y):
         if (origin_x < 0 or origin_x >= self.size
-            or origin_y < 0 or origin_y >= self.size
-            or destination_x < 0 or destination_x >= self.size
-            or destination_y < 0 or destination_y >= self.size):
+                or origin_y < 0 or origin_y >= self.size
+                or destination_x < 0 or destination_x >= self.size
+                or destination_y < 0 or destination_y >= self.size):
             return False
-        
-        if(origin_x == destination_x and origin_y == destination_y):
+
+        if origin_x == destination_x and origin_y == destination_y:
             return False
 
         if self.turn == Turn.Neutron and self.state[origin_x][origin_y] != "N":
@@ -91,9 +97,9 @@ class Neutron:
         diff_x = abs(destination_x - origin_x)
         diff_y = abs(destination_y - origin_y)
 
-        if(not (diff_x == diff_y and diff_x != 0
-                or diff_x == 0
-                or diff_y == 0)):
+        if (not (diff_x == diff_y and diff_x != 0
+                 or diff_x == 0
+                 or diff_y == 0)):
             return False
 
         forwards_x = True
@@ -112,29 +118,29 @@ class Neutron:
 
         hit = False
 
-        while(not hit):
+        while not hit:
             aux_x = next_x
             aux_y = next_y
 
-            if(diff_x != 0):
-                if(forwards_x):
+            if diff_x != 0:
+                if forwards_x:
                     next_x = aux_x + 1
                 else:
                     next_x = aux_x - 1
 
-            if(diff_y != 0):
-                if(forwards_y):
+            if diff_y != 0:
+                if forwards_y:
                     next_y = aux_y + 1
                 else:
                     next_y = aux_y - 1
 
-            if(next_x < 0 or next_x >= self.size
-                or next_y < 0 or next_y >= self.size):
+            if (next_x < 0 or next_x >= self.size
+                    or next_y < 0 or next_y >= self.size):
                 hit = True
-            elif(self.state[next_x][next_y] != "0"):
+            elif self.state[next_x][next_y] != "0":
                 hit = True
 
-        if(aux_x != destination_x or aux_y != destination_y):
+        if aux_x != destination_x or aux_y != destination_y:
             return False
 
         return True
