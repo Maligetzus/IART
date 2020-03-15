@@ -2,6 +2,8 @@ from minimax import minimax
 from neutron import Neutron
 import neutron_util
 
+import game_gui
+
 def main():
     # game = Neutron(5, neutron_util.Player.White, neutron_util.Turn.Pawn, [["0", "B", "0", "0", "B"], ["0", "0", "0", "0", "0"], ["0", "0", "B", "B", "W"], ["0", "0", "B", "0", "N"], ["0", "W", "W", "W", "W"]])
     game = Neutron(5)
@@ -40,4 +42,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    #main()
+    game_gui.init_game_window()
