@@ -49,7 +49,7 @@ class Neutron:
         if nutils.victory(Player.White, self.state):
             return True, Player.White
 
-        if nutils.num_empty_fields_around_neutron(self.state) == 0:
+        if nutils.num_empty_fields_around_neutron(self.state, self.neutron_position) == 0:
             return True, Player.White if self.curr_player != Player.White else Player.Black
         else:
             return False, None

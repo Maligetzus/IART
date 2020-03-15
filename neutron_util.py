@@ -1,6 +1,5 @@
 import enum
 
-
 class Player(enum.Enum):
     White = "White"
     Black = "Black"
@@ -10,44 +9,43 @@ class Turn(enum.Enum):
     Neutron = "Neutron"
     Pawn = "Pawn"
 
-def get_score(game):
-    return 1000 + 10 * num_empty_tiles_player(game) - 10 * num_empty_tiles_opponent(game) +\
-           200 * neutron_to_player(game) - 200 * neutron_to_opponent(game) + 10 * odd(game) *\
-           (8 - num_empty_fields_around_neutron(game)) + 500 * victory_player(game.curr_player, game.state) - 500\
-           * victory_opponent(game)
 
-def num_empty_tiles_player(game):
-    return __num_empty_tiles(game.curr_player, game.state)
+def get_score(curr_player, state, neutron_position):
+    return 1000 + 10 * num_empty_tiles_player(curr_player, state) - 10 * num_empty_tiles_opponent(curr_player, state) +\
+           200 * neutron_to_player(curr_player, state, neutron_position) - 200 * neutron_to_opponent(curr_player, state, neutron_position) + 10 * odd(state, neutron_position) *\
+           (8 - num_empty_fields_around_neutron(state, neutron_position)) + 500 * victory_player(curr_player, state) - 500\
+           * victory_opponent(curr_player, state)
 
-def num_empty_tiles_opponent(game):
-    return __num_empty_tiles(Player.White if game.curr_player == Player.Black else Player.Black, game.state)
+def num_empty_tiles_player(curr_player, state):
+    return __num_empty_tiles(curr_player, state)
 
-def neutron_to_player(game):
-    return __neutron_to(game.curr_player, game.state, game.neutron_position)
+def num_empty_tiles_opponent(curr_player, state):
+    return __num_empty_tiles(Player.White if curr_player == Player.Black else Player.Black, state)
 
-def neutron_to_opponent(game):
-    return __neutron_to(Player.White if game.curr_player == Player.Black else Player.Black, game.state, game.neutron_position)
+def neutron_to_player(curr_player, state, neutron_position):
+    return __neutron_to(curr_player, state, neutron_position)
 
-def num_empty_fields_around_neutron(game):
+def neutron_to_opponent(curr_player, state, neutron_position):
+    return __neutron_to(Player.White if curr_player == Player.Black else Player.Black, state, neutron_position)
+
+def num_empty_fields_around_neutron(state, neutron_position):
     counter = 0
 
-    x, y = game.neutron_position
+    x, y = neutron_position
     
     left = True
     right = True
     up = True
     down = True
 
-    if x == game.size - 1:
+    if x == len(state) - 1:
         down = False
     if x == 0:
         up = False
-    if y == game.size - 1:
+    if y == len(state) - 1:
         right = False
     if y == 0:
         left = False
-
-    state = game.state
 
     if left and up and state[x - 1][y - 1] == '0':
         counter += 1
@@ -69,19 +67,19 @@ def num_empty_fields_around_neutron(game):
     return counter
 
 
-def odd(game):
-    if num_empty_fields_around_neutron(game) % 2 == 0:
+def odd(state, neutron_position):
+    if num_empty_fields_around_neutron(state, neutron_position) % 2 == 0:
         return -1
     else:
         return 1
 
 
-def victory_player(game):
-    return victory(game.curr_player, game.state)
+def victory_player(curr_player, state):
+    return victory(curr_player, state)
 
 
-def victory_opponent(game):
-    return victory(Player.White if game.curr_player == Player.Black else Player.Black, game.state)
+def victory_opponent(curr_player, state):
+    return victory(Player.White if curr_player == Player.Black else Player.Black, state)
 
 
 def __num_empty_tiles(player, state):
