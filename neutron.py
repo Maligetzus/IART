@@ -52,6 +52,21 @@ class Neutron:
             return False, None
 
     def move_piece(self, origin_x, origin_y, destination_x, destination_y):
+        if(not can_move(origin_x, origin_y, destination_x, destination_y)):
+            return False
+
+        self.state[origin_x][origin_y], self.state[destination_x][destination_y] = self.state[destination_x][destination_y], self.state[origin_x][origin_y]
+
+        if self.turn == Turn.Pawn:
+            self.curr_player = Player.White if self.curr_player != Player.White else Player.Black
+
+            self.turn = Turn.Neutron
+        else:
+            self.turn = Turn.Pawn
+
+        return True
+
+    def can_move(self, origin_x, origin_y, destination_x, destination_y):
         if (origin_x < 0 or origin_x >= self.size
             or origin_y < 0 or origin_y >= self.size
             or destination_x < 0 or destination_x >= self.size
@@ -121,15 +136,6 @@ class Neutron:
 
         if(aux_x != destination_x or aux_y != destination_y):
             return False
-
-        self.state[origin_x][origin_y], self.state[destination_x][destination_y] = self.state[destination_x][destination_y], self.state[origin_x][origin_y]
-
-        if self.turn == Turn.Pawn:
-            self.curr_player = Player.White if self.curr_player != Player.White else Player.Black
-
-            self.turn = Turn.Neutron
-        else:
-            self.turn = Turn.Pawn
 
         return True
 
