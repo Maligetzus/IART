@@ -10,76 +10,44 @@ class Turn(enum.Enum):
     Neutron = "Neutron"
     Pawn = "Pawn"
 
-
-def get_neutron_position(state):
-    x = -1
-    y = -1
-
-    # Gets the coordinates for the Neutron
-    found = False
-
-    for i in range(0, len(state)):
-        for j in range(0, len(state[i])):
-            if state[i][j] == "N":
-                x = i
-                y = j
-
-                found = True
-                break
-
-        if found:
-            break
-
-    return x, y
-
-
 def get_score(game):
     return 1000 + 10 * num_empty_tiles_player(game) - 10 * num_empty_tiles_opponent(game) +\
            200 * neutron_to_player(game) - 200 * neutron_to_opponent(game) + 10 * odd(game) *\
-           (8 - num_empty_fields_around_neutron(game.state)) + 500 * victory_player(game.curr_player, game.state) - 500\
-           * victory_opponent(game.curr_player, game.state)
-
+           (8 - num_empty_fields_around_neutron(game)) + 500 * victory_player(game.curr_player, game.state) - 500\
+           * victory_opponent(game)
 
 def num_empty_tiles_player(game):
-    return __num_empty_tiles(game.curr_player, game)
-
+    return __num_empty_tiles(game.curr_player, game.state)
 
 def num_empty_tiles_opponent(game):
-    if game.curr_player == "Black":
-        return __num_empty_tiles("White", game)
-    elif game.curr_player == "White":
-        return __num_empty_tiles("Black", game)
-
+    return __num_empty_tiles(Player.White if game.curr_player == Player.Black else Player.Black, game.state)
 
 def neutron_to_player(game):
-    return __neutron_to(game.curr_player, game)
-
+    return __neutron_to(game.curr_player, game.state, game.neutron_position)
 
 def neutron_to_opponent(game):
-    if game.curr_player == "Black":
-        return __neutron_to("White", game)
-    elif game.curr_player == "White":
-        return __neutron_to("Black", game)
+    return __neutron_to(Player.White if game.curr_player == Player.Black else Player.Black, game.state, game.neutron_position)
 
-
-def num_empty_fields_around_neutron(state):
+def num_empty_fields_around_neutron(game):
     counter = 0
 
-    x, y = get_neutron_position(state)
+    x, y = game.neutron_position
     
     left = True
     right = True
     up = True
     down = True
 
-    if x == len(state) - 1:
+    if x == game.size - 1:
         down = False
     if x == 0:
         up = False
-    if y == len(state) - 1:
+    if y == game.size - 1:
         right = False
     if y == 0:
         left = False
+
+    state = game.state
 
     if left and up and state[x - 1][y - 1] == '0':
         counter += 1
@@ -108,42 +76,71 @@ def odd(game):
         return 1
 
 
-def victory_player(curr_player, state):
-    return victory(curr_player, state)
+def victory_player(game):
+    return victory(game.curr_player, game.state)
 
 
-def victory_opponent(curr_player, state):
-    if curr_player == Player.Black:
-        return victory(Player.White, state)
-    else:
-        return victory(Player.Black, state)
+def victory_opponent(game):
+    return victory(Player.White if game.curr_player == Player.Black else Player.Black, game.state)
 
 
-def __num_empty_tiles(player, game):
+def __num_empty_tiles(player, state):
     counter = 0
-    if player == "Black":
-        for tile in game.state[0]:
+    if player == Player.Black:
+        for tile in state[0]:
             if tile == '0':
                 counter += 1
-    elif player == "White":
-        for tile in game.state[game.size - 1]:
+    else:
+        for tile in state[len(state) - 1]:
             if tile == '0':
                 counter += 1
 
     return counter
 
 
-def __neutron_to(player, game):
-    neutron_x, neutron_y = game.neutron_position
-    if player == "Black":
-        for i in range(0, neutron_x):
-            if game.state[i][neutron_y] != 'N':
-                return 0
-    elif player == "White":
-        for i in range(neutron_x, game.size):
-            if game.state[i][neutron_y] != 'N':
-                return 0
-    return 1
+def __neutron_to(player, state, neutron_position):
+    counter = 0
+
+    neutron_x, neutron_y = neutron_position
+
+    diff_x = -1
+    diff_y = -1
+
+    if player == Player.Black:
+        diff_x = neutron_x
+    else:
+        diff_x = abs(len(state) - 1 - neutron_x)
+    
+    up = True
+    diag_left = True if neutron_y >= diff_x else False
+    diag_right = True if len(state[0]) - 1 - neutron_y >= diff_x else False
+
+    for i in range(1, diff_x + 1):
+        if up:
+            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y] != "0":
+                up = False
+        
+        if diag_left:
+            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y - i] != "0":
+                diag_left = False
+
+        if diag_right:
+            if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y + i] != "0":
+                diag_right = False
+            
+        if(not up and not diag_left and not diag_right):
+            break
+
+    if(up):
+        counter += 1
+
+    if(diag_left):
+        counter += 1
+
+    if(diag_right):
+        counter += 1
+
+    return counter
 
 
 def victory(player, state):
