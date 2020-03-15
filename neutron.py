@@ -52,7 +52,7 @@ class Neutron:
             return False, None
 
     def move_piece(self, origin_x, origin_y, destination_x, destination_y):
-        if(not can_move(origin_x, origin_y, destination_x, destination_y)):
+        if(not self.can_move(origin_x, origin_y, destination_x, destination_y)):
             return False
 
         self.state[origin_x][origin_y], self.state[destination_x][destination_y] = self.state[destination_x][destination_y], self.state[origin_x][origin_y]
