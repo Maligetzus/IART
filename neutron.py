@@ -1,20 +1,13 @@
 import neutron_util as nutils
 from neutron_util import Player, Turn
-
+import copy
 
 class Neutron:
 
-    def __init__(self, size, curr_player=Player.White, turn=Turn.Neutron, state=None):
+    def __init__(self, size, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1)):
         self.size = size
         self.turn = turn
         self.curr_player = curr_player
-        self.state = state
-        self.neutron_position = size / 2, size / 2
-
-    def __init__(self, size, curr_player, turn, state, neutron_position):
-        self.size = size
-        self.curr_player = curr_player
-        self.turn = turn
         self.state = state
         self.neutron_position = neutron_position
 
@@ -29,6 +22,7 @@ class Neutron:
         self.curr_player = starting_player
         self.turn = Turn.Pawn
         self.state = []
+        self.neutron_position = int(self.size / 2), int(self.size / 2)
 
         for i in range(0, self.size):
             row = []
@@ -61,6 +55,17 @@ class Neutron:
             return False, None
 
     def move_piece(self, origin_x, origin_y, destination_x, destination_y):
+        return self.__move_piece(self, origin_x, origin_y, destination_x, destination_y)
+
+    def hypothetical_move_piece(self, origin_x, origin_y, destination_x, destination_y):
+        game = Neutron(self.size, self.curr_player, self.turn, copy.deepcopy(self.state), self.neutron_position)
+        
+        success = self.__move_piece(game, origin_x, origin_y, destination_x, destination_y)
+
+        return success, game
+
+    @staticmethod
+    def __move_piece(self, origin_x, origin_y, destination_x, destination_y):
         if not self.can_move(origin_x, origin_y, destination_x, destination_y):
             return False
 
@@ -78,28 +83,6 @@ class Neutron:
             self.turn = Turn.Pawn
 
         return True
-
-    def hypothetical_move_piece(self, origin_x, origin_y, destination_x, destination_y):
-
-        game = Neutron(self.size, self.curr_player, self.turn, self.state, self.neutron_position)
-
-        if not game.can_move(origin_x, origin_y, destination_x, destination_y):
-            return False
-
-        if game.state[origin_x][origin_y] == 'N':
-            game.neutron_position = destination_x, destination_y
-
-        game.state[origin_x][origin_y], game.state[destination_x][destination_y] = \
-            game.state[destination_x][destination_y], game.state[origin_x][origin_y]
-
-        if game.turn == Turn.Pawn:
-            game.curr_player = Player.White if game.curr_player != Player.White else Player.Black
-
-            game.turn = Turn.Neutron
-        else:
-            game.turn = Turn.Pawn
-
-        return game
 
     def can_move(self, origin_x, origin_y, destination_x, destination_y):
         if (origin_x < 0 or origin_x >= self.size
