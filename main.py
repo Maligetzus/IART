@@ -28,24 +28,24 @@ def main():
             else:
                 destination = None
 
-                if(squares[1] == "0"):
+                if squares[1] == "0":
                     destination = Direction.Up
-                elif(squares[1] == "1"):
+                elif squares[1] == "1":
                     destination = Direction.Down
-                elif(squares[1] == "2"):
+                elif squares[1] == "2":
                     destination = Direction.Left
-                elif(squares[1] == "3"):
+                elif squares[1] == "3":
                     destination = Direction.Right
-                elif(squares[1] == "4"):
+                elif squares[1] == "4":
                     destination = Direction.LeftUp
-                elif(squares[1] == "5"):
+                elif squares[1] == "5":
                     destination = Direction.RightUp
-                elif(squares[1] == "6"):
+                elif squares[1] == "6":
                     destination = Direction.LeftDown
-                elif(squares[1] == "7"):
+                elif squares[1] == "7":
                     destination = Direction.RightDown
 
-                if(destination != None):
+                if destination != None:
                     origin_x, origin_y = Neutron.square_to_index(squares[0])
 
                     success = game.move_piece(origin_x, origin_y, destination)

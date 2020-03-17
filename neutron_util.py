@@ -1,5 +1,6 @@
 import enum
 
+
 class Player(enum.Enum):
     White = "White"
     Black = "Black"
@@ -34,17 +35,22 @@ def get_score(curr_player, state, neutron_position):
            (8 - num_empty_fields_around_neutron(state, neutron_position)) + 500 * victory_player(curr_player, state) - 500\
            * victory_opponent(curr_player, state)
 
+
 def num_empty_tiles_player(curr_player, state):
     return __num_empty_tiles(curr_player, state)
+
 
 def num_empty_tiles_opponent(curr_player, state):
     return __num_empty_tiles(Player.White if curr_player == Player.Black else Player.Black, state)
 
+
 def neutron_to_player(curr_player, state, neutron_position):
     return __neutron_to(curr_player, state, neutron_position)
 
+
 def neutron_to_opponent(curr_player, state, neutron_position):
     return __neutron_to(Player.White if curr_player == Player.Black else Player.Black, state, neutron_position)
+
 
 def num_empty_fields_around_neutron(state, neutron_position):
     counter = 0
@@ -144,16 +150,16 @@ def __neutron_to(player, state, neutron_position):
             if state[neutron_x - i if player == Player.Black else neutron_x + i][neutron_y + i] != Tile.Empty:
                 diag_right = False
             
-        if(not up and not diag_left and not diag_right):
+        if not up and not diag_left and not diag_right:
             break
 
-    if(up):
+    if up:
         counter += 1
 
-    if(diag_left):
+    if diag_left:
         counter += 1
 
-    if(diag_right):
+    if diag_right:
         counter += 1
 
     return counter

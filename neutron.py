@@ -2,6 +2,7 @@ import neutron_util as nutils
 from neutron_util import Player, Turn, Direction, Tile
 import copy
 
+
 class Neutron:
 
     def __init__(self, size, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1)):
@@ -103,16 +104,16 @@ class Neutron:
         move_x = 0
         move_y = 0
 
-        if(direction == Direction.Down or direction == Direction.LeftDown or direction == Direction.RightDown):
+        if direction == Direction.Down or direction == Direction.LeftDown or direction == Direction.RightDown:
             move_x = 1
         
-        if(direction == Direction.Up or direction == Direction.LeftUp or direction == Direction.RightUp):
+        if direction == Direction.Up or direction == Direction.LeftUp or direction == Direction.RightUp:
             move_x = -1
 
-        if(direction == Direction.Right or direction == Direction.RightUp or direction == Direction.RightDown):
+        if direction == Direction.Right or direction == Direction.RightUp or direction == Direction.RightDown:
             move_y = 1
         
-        if(direction == Direction.Left or direction == Direction.LeftUp or direction == Direction.LeftDown):
+        if direction == Direction.Left or direction == Direction.LeftUp or direction == Direction.LeftDown:
             move_y = -1
 
         aux_x = origin_x
@@ -135,7 +136,7 @@ class Neutron:
             elif self.state[next_x][next_y] != Tile.Empty:
                 hit = True
 
-        if(aux_x == origin_x and aux_y == origin_y):
+        if aux_x == origin_x and aux_y == origin_y:
             return False, origin_x, origin_y
 
         return True, aux_x, aux_y
