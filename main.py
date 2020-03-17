@@ -49,5 +49,13 @@ if __name__ == '__main__':
                   ['E', 'B', 'R', 'B', 'E'],
                   ['R', 'R', 'E', 'R', 'R']]
 
-    gui = game_gui.BoardGUI(test_board, game_gui.BoardType.Board_5X5)
+    test_board2 = [['B', 'B', 'E', 'B', 'B', 'E', 'E'],
+                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
+                  ['E', 'R', 'N', 'R', 'E', 'E', 'E'],
+                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
+                  ['R', 'R', 'E', 'R', 'R', 'E', 'E'],
+                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
+                  ['E', 'B', 'R', 'B', 'E', 'E', 'E']]
+
+    gui = game_gui.BoardGUI(test_board2, game_gui.BoardType.Board_7X7)
     gui.game_loop()

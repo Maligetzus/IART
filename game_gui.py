@@ -11,23 +11,9 @@ class BoardGUI:
     def __init__(self, board, type):
         self.board = board
         self.board_type = type
-        self.calculate_sizes()
         self.init_window()
         self.load_resources()
         self.load_background()
-
-    def calculate_sizes(self):
-        self.BOARD_SIZE = 750
-        self.BORDER_SIZE = 25
-        if self.board_type == BoardType.Board_5X5:
-            self.BEETWEEN_TYLE_SIZE = 15
-            self.TYLE_SIZE = (self.BOARD_SIZE - 4*self.BEETWEEN_TYLE_SIZE) / 5
-            self.PIECE_SIZE = self.TYLE_SIZE - 38
-
-        self.PIECE_OFFSET = (self.TYLE_SIZE - self.PIECE_SIZE)/2
-
-
-
 
     def init_window(self):
         pygame.init()
@@ -39,6 +25,42 @@ class BoardGUI:
         self.red_piece_image = pygame.image.load('resources/piece_red.png')
         self.blue_piece_image = pygame.image.load('resources/piece_blue.png')
         self.game_board_tile = pygame.image.load('resources/board_tile.png')
+
+        if (self.board_type == BoardType.Board_7X7):
+            self.scale_resources_for_7x7()
+
+        self.register_resources_dimensions()
+        self.register_spacing()
+
+
+    def register_resources_dimensions(self):
+        # Sizes
+        self.TYLE_SIZE = self.game_board_tile.get_width()
+        self.PIECE_SIZE = self.red_piece_image.get_width()
+
+
+    def scale_resources_for_7x7(self):
+        piece_current_side = self.red_piece_image.get_width()
+        piece_new_side = int(piece_current_side*5/7)
+
+        tile_side = self.game_board_tile.get_width()
+        tile_new_side = int(tile_side*5/7)
+
+        self.red_piece_image = pygame.transform.scale(self.red_piece_image, (piece_new_side, piece_new_side))
+        self.blue_piece_image = pygame.transform.scale(self.blue_piece_image, (piece_new_side, piece_new_side))
+        self.game_board_tile = pygame.transform.scale(self.game_board_tile, ( tile_new_side, tile_new_side))
+
+
+    def register_spacing(self):
+        self.BOARD_SIZE = 750
+        self.BORDER_SIZE = 25
+        self.PIECE_OFFSET = (self.TYLE_SIZE - self.PIECE_SIZE)/2
+
+        if self.board_type == BoardType.Board_5X5:
+            self.BEETWEEN_TYLE_SIZE = (self.BOARD_SIZE - 5*self.TYLE_SIZE)/4
+        elif self.board_type == BoardType.Board_7X7:
+            self.BEETWEEN_TYLE_SIZE = (self.BOARD_SIZE - 7*self.TYLE_SIZE)/6
+
 
     def load_background(self):
         # Create The Backgound
@@ -70,6 +92,7 @@ class BoardGUI:
                                         + self.BEETWEEN_TYLE_SIZE * curr_col_number + self.PIECE_OFFSET,
                                         self.BORDER_SIZE + curr_line_number * self.TYLE_SIZE
                                         + self.BEETWEEN_TYLE_SIZE * curr_line_number + self.PIECE_OFFSET)
+
                 if tile == 'R':
                     self.screen.blit(self.red_piece_image, current_piece_coords)
                 elif tile == 'B':
@@ -80,9 +103,6 @@ class BoardGUI:
             curr_col_number = 0
             curr_line_number += 1
 
-
-
-        self.screen.blit(self.game_board_tile, (25, 25))
 
         pygame.display.flip()
 
