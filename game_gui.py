@@ -1,17 +1,37 @@
 import pygame
 from pygame.locals import *
+from enum import Enum
 
+class BoardType(Enum):
+    Board_5X5 = 1
+    Board_7X7 = 2
 
 class BoardGUI:
-    def __init__(self, board):
+
+    def __init__(self, board, type):
         self.board = board
+        self.board_type = type
+        self.calculate_sizes()
         self.init_window()
         self.load_resources()
         self.load_background()
 
+    def calculate_sizes(self):
+        self.BOARD_SIZE = 750
+        self.BORDER_SIZE = 25
+        if self.board_type == BoardType.Board_5X5:
+            self.BEETWEEN_TYLE_SIZE = 15
+            self.TYLE_SIZE = (self.BOARD_SIZE - 4*self.BEETWEEN_TYLE_SIZE) / 5
+            self.PIECE_SIZE = self.TYLE_SIZE - 38
+
+        self.PIECE_OFFSET = (self.TYLE_SIZE - self.PIECE_SIZE)/2
+
+
+
+
     def init_window(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 800), DOUBLEBUF)
+        self.screen = pygame.display.set_mode((800, 800), HWSURFACE|DOUBLEBUF|RESIZABLE)
         pygame.display.set_caption("Neutron")
 
     def load_resources(self):
@@ -34,31 +54,36 @@ class BoardGUI:
         self.screen.blit(self.background, (0, 0))
 
         #Board
-        currLineNumber = 0
-        currColNumber = 0
+        curr_line_number = 0
+        curr_col_number = 0
 
         for line in self.board:
             for tile in line:
-                currentTileCoords = (25 + currColNumber*132 + 15 * currColNumber, 25 + currLineNumber*132 + 15 * currLineNumber)
-                self.screen.blit(self.game_board_tile, currentTileCoords)
+                current_tile_coords = (self.BORDER_SIZE + curr_col_number*self.TYLE_SIZE
+                                       + self.BEETWEEN_TYLE_SIZE * curr_col_number,
+                                       self.BORDER_SIZE + curr_line_number*self.TYLE_SIZE
+                                       + self.BEETWEEN_TYLE_SIZE * curr_line_number)
 
-                currentPieceCoords = (25 + currColNumber * 132 + 15 * currColNumber + 3, 25 + currLineNumber * 132 + 15 * currLineNumber + 3)
+                self.screen.blit(self.game_board_tile, current_tile_coords)
+
+                current_piece_coords = (self.BORDER_SIZE + curr_col_number * self.TYLE_SIZE
+                                        + self.BEETWEEN_TYLE_SIZE * curr_col_number + self.PIECE_OFFSET,
+                                        self.BORDER_SIZE + curr_line_number * self.TYLE_SIZE
+                                        + self.BEETWEEN_TYLE_SIZE * curr_line_number + self.PIECE_OFFSET)
                 if tile == 'R':
-                    self.screen.blit(self.red_piece_image, currentPieceCoords)
+                    self.screen.blit(self.red_piece_image, current_piece_coords)
                 elif tile == 'B':
-                    self.screen.blit(self.blue_piece_image, currentPieceCoords)
+                    self.screen.blit(self.blue_piece_image, current_piece_coords)
 
-                currColNumber += 1
+                curr_col_number += 1
 
-            currColNumber = 0
-            currLineNumber += 1
+            curr_col_number = 0
+            curr_line_number += 1
 
 
 
         self.screen.blit(self.game_board_tile, (25, 25))
 
-        #Pieces
-        self.screen.blit(self.blue_piece_image, (28, 28))
         pygame.display.flip()
 
 

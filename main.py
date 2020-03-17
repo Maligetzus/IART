@@ -43,11 +43,11 @@ def main():
 
 if __name__ == '__main__':
     #main()
-    test_board = [['B', 'B', 'B', 'B', 'B'],
-                  ['E', 'E', 'E', 'E', 'E'],
-                  ['E', 'E', 'N', 'E', 'E'],
-                  ['E', 'E', 'E', 'E', 'E'],
-                  ['R', 'R', 'R', 'R', 'R']]
+    test_board = [['B', 'B', 'E', 'B', 'B'],
+                  ['E', 'B', 'R', 'B', 'E'],
+                  ['E', 'R', 'N', 'R', 'E'],
+                  ['E', 'B', 'R', 'B', 'E'],
+                  ['R', 'R', 'E', 'R', 'R']]
 
-    gui = game_gui.BoardGUI(test_board)
+    gui = game_gui.BoardGUI(test_board, game_gui.BoardType.Board_5X5)
     gui.game_loop()
