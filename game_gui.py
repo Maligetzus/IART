@@ -113,24 +113,25 @@ class BoardGUI:
             return False
 
 
-    def handle_mouse_key_press(self, mouse_coords):
-        print("Mouse button Pressed at: ", mouse_coords)
+    def get_board_coords_from_screen_coords(self, mouse_coords):
+        #print("Mouse button Pressed at: ", mouse_coords)
         if self.board_type == BoardType.Board_5X5:
             board_side = 5
         else:
             board_side = 7
 
         if mouse_coords[0] <= self.BORDER_SIZE or mouse_coords[1] <= self.BORDER_SIZE:
-            print("B4 Board")
+            return (-1, -1)
         elif mouse_coords[0] >= self.BOARD_SIZE+self.BORDER_SIZE or mouse_coords[1] >= self.BOARD_SIZE+self.BORDER_SIZE:
-            print("After Board")
+            return (-1, -1)
         else:
             current_coords = (self.BORDER_SIZE+self.PIECE_OFFSET, self.BORDER_SIZE+self.PIECE_OFFSET)
-            for line in range(0, board_side): # Lines
+            for line in range(0, board_side):  # Lines
+
                 for column in range(0, board_side):  # Columns
                     opposite_side = (current_coords[0] + self.PIECE_SIZE, current_coords[1] + self.PIECE_SIZE)
                     if self.is_between(mouse_coords, current_coords, opposite_side):
-                        print("Coords: (", column, ",", line,")")
+                        return (column, line)
 
                     current_coords = (current_coords[0] + self.PIECE_SIZE + 2 * self.PIECE_OFFSET + self.BEETWEEN_TYLE_SIZE,
                                         current_coords[1])
@@ -138,8 +139,18 @@ class BoardGUI:
                 current_coords = (self.BORDER_SIZE+self.PIECE_OFFSET,
                                   current_coords[1]+self.PIECE_SIZE+2*self.PIECE_OFFSET+self.BEETWEEN_TYLE_SIZE)
 
+            return (-1, -1)
 
-            print("Tile / Between tiles")
+
+    def tile_has_a_piece(self, board_coords):
+        if self.board[board_coords[1]][board_coords[0]] != 'E':
+            return True
+        else:
+            return False
+
+    def handle_piece_click(self, click_board_coords):
+        print("Select piece: ", click_board_coords)
+
 
     def game_loop(self):
         ## Display The Background
@@ -161,7 +172,10 @@ class BoardGUI:
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
                     going = False
                 elif event.type == MOUSEBUTTONDOWN:
-                    self.handle_mouse_key_press(pygame.mouse.get_pos())
+                    click_board_coords = self.get_board_coords_from_screen_coords(pygame.mouse.get_pos())
+                    if click_board_coords != (-1, -1) and self.tile_has_a_piece(click_board_coords):
+                        self.handle_piece_click(click_board_coords)
+
                 elif event.type == KEYDOWN and event.key == K_SPACE:
                     print("ESPACOOOOOOOOOOOOOO")
                 # elif event.type == MOUSEMOTION:
