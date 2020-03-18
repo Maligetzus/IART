@@ -106,6 +106,40 @@ class BoardGUI:
 
         pygame.display.flip()
 
+    def is_between(self, coords, top_left_point, bot_right_point):
+        if top_left_point[0] <= coords[0] <= bot_right_point[0] and top_left_point[1] <= coords[1] <= bot_right_point[1]:
+            return True
+        else:
+            return False
+
+
+    def handle_mouse_key_press(self, mouse_coords):
+        print("Mouse button Pressed at: ", mouse_coords)
+        if self.board_type == BoardType.Board_5X5:
+            board_side = 5
+        else:
+            board_side = 7
+
+        if mouse_coords[0] <= self.BORDER_SIZE or mouse_coords[1] <= self.BORDER_SIZE:
+            print("B4 Board")
+        elif mouse_coords[0] >= self.BOARD_SIZE+self.BORDER_SIZE or mouse_coords[1] >= self.BOARD_SIZE+self.BORDER_SIZE:
+            print("After Board")
+        else:
+            current_coords = (self.BORDER_SIZE+self.PIECE_OFFSET, self.BORDER_SIZE+self.PIECE_OFFSET)
+            for line in range(0, board_side): # Lines
+                for column in range(0, board_side):  # Columns
+                    opposite_side = (current_coords[0] + self.PIECE_SIZE, current_coords[1] + self.PIECE_SIZE)
+                    if self.is_between(mouse_coords, current_coords, opposite_side):
+                        print("Coords: (", column, ",", line,")")
+
+                    current_coords = (current_coords[0] + self.PIECE_SIZE + 2 * self.PIECE_OFFSET + self.BEETWEEN_TYLE_SIZE,
+                                        current_coords[1])
+
+                current_coords = (self.BORDER_SIZE+self.PIECE_OFFSET,
+                                  current_coords[1]+self.PIECE_SIZE+2*self.PIECE_OFFSET+self.BEETWEEN_TYLE_SIZE)
+
+
+            print("Tile / Between tiles")
 
     def game_loop(self):
         ## Display The Background
@@ -127,12 +161,11 @@ class BoardGUI:
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
                     going = False
                 elif event.type == MOUSEBUTTONDOWN:
-                    print("Mouse button Pressed at: ", pygame.mouse.get_pos())
+                    self.handle_mouse_key_press(pygame.mouse.get_pos())
                 elif event.type == KEYDOWN and event.key == K_SPACE:
                     print("ESPACOOOOOOOOOOOOOO")
                 # elif event.type == MOUSEMOTION:
                 # print("Mouse Movement")
             self.display()
-
 
         pygame.quit()
