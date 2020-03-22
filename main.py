@@ -57,5 +57,5 @@ if __name__ == '__main__':
                   ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
                   ['E', 'B', 'R', 'B', 'E', 'E', 'E']]
 
-    gui = game_gui.BoardGUI(test_board2, game_gui.BoardType.Board_7X7)
+    gui = game_gui.GameGui(test_board2, game_gui.BoardTypes.Board_7X7)
     gui.game_loop()
