@@ -1,4 +1,5 @@
 import pygame
+import python_gui_state
 from pygame.locals import *
 from enum import Enum
 
@@ -14,6 +15,7 @@ class BoardGUI:
         self.init_window()
         self.load_resources()
         self.load_background()
+        self.state = python_gui_state.GuiState(self)
 
     def init_window(self):
         pygame.init()
@@ -148,8 +150,8 @@ class BoardGUI:
         else:
             return False
 
-    def handle_piece_click(self, click_board_coords):
-        print("Select piece: ", click_board_coords)
+    def test_print(self):
+        print("Print")
 
 
     def game_loop(self):
@@ -172,12 +174,16 @@ class BoardGUI:
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
                     going = False
                 elif event.type == MOUSEBUTTONDOWN:
-                    click_board_coords = self.get_board_coords_from_screen_coords(pygame.mouse.get_pos())
-                    if click_board_coords != (-1, -1) and self.tile_has_a_piece(click_board_coords):
-                        self.handle_piece_click(click_board_coords)
+                    self.state.handle_mouse_down()
 
                 elif event.type == KEYDOWN and event.key == K_SPACE:
                     print("ESPACOOOOOOOOOOOOOO")
+
+                elif event.type == MOUSEBUTTONUP:
+                    # movement = pygame.mouse.get_rel()
+                    # print(movement)
+                    self.state.handle_mouse_up()
+
                 # elif event.type == MOUSEMOTION:
                 # print("Mouse Movement")
             self.display()
