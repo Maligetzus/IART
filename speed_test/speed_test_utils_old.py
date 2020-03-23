@@ -23,10 +23,10 @@ class Direction(enum.Enum):
 
 
 class Tile(enum.Enum):
-    Empty = 'E'
-    Black = 'B'
-    White = 'W'
-    Neutron = 'N'
+    Empty = 0
+    Black = 2
+    White = 1
+    Neutron = 3
 
 
 def get_score(curr_player, state, neutron_position):
