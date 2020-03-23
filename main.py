@@ -21,8 +21,8 @@ def main():
 
         print(game.curr_player.value + " player, play " + game.turn.value + " (ex.: E1 5)")
 
-        current_turn = game.curr_player
-        while game.curr_player == current_turn and not quit_pressed:
+        current_turn = game.turn
+        while game.turn == current_turn and not quit_pressed:
             # Max 60 frames per second
             clock.tick(60)
 
