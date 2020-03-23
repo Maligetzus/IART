@@ -3,6 +3,8 @@ from neutron import Neutron
 import neutron_util
 from neutron_util import Direction
 
+import game_gui
+
 def main():
     # game = Neutron(5, neutron_util.Player.White, neutron_util.Turn.Pawn, [["0", "B", "0", "0", "B"], ["0", "0", "0", "0", "0"], ["0", "0", "B", "B", "W"], ["0", "0", "B", "0", "N"], ["0", "W", "W", "W", "W"]])
     game = Neutron(5)
@@ -63,4 +65,20 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    #main()
+    test_board = [['B', 'B', 'E', 'B', 'B'],
+                  ['E', 'B', 'R', 'B', 'E'],
+                  ['E', 'R', 'N', 'R', 'E'],
+                  ['E', 'B', 'R', 'B', 'E'],
+                  ['R', 'R', 'E', 'R', 'R']]
+
+    test_board2 = [['B', 'B', 'E', 'B', 'B', 'E', 'E'],
+                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
+                  ['E', 'R', 'N', 'R', 'E', 'E', 'E'],
+                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
+                  ['R', 'R', 'E', 'R', 'R', 'E', 'E'],
+                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
+                  ['E', 'B', 'R', 'B', 'E', 'E', 'E']]
+
+    gui = game_gui.GameGui(test_board2, game_gui.BoardTypes.Board_7X7)
+    gui.game_loop()
