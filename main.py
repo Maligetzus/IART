@@ -1,84 +1,61 @@
+import pygame
+
 from minimax import minimax
 from neutron import Neutron
 import neutron_util
-from neutron_util import Direction
-
+from neutron_util import Direction, BoardTypes
 import game_gui
+from pygame.locals import *
 
 def main():
-    # game = Neutron(5, neutron_util.Player.White, neutron_util.Turn.Pawn, [["0", "B", "0", "0", "B"], ["0", "0", "0", "0", "0"], ["0", "0", "B", "B", "W"], ["0", "0", "B", "0", "N"], ["0", "W", "W", "W", "W"]])
-    game = Neutron(5)
+    game = Neutron(BoardTypes.Board_5X5)
     game.start()
 
     finished, winner = game.has_finished()
 
+    # Prepare Game Objects
+    clock = pygame.time.Clock()
+
     while not finished:
-        game.draw_board()
 
         print(game.curr_player.value + " player, play " + game.turn.value + " (ex.: E1 5)")
-        print("Directions: 0 - Up, 1 - Down, 2 - Left, 3 - Right, 4 - LeftUp, 5 - RightUp, 6 - LeftDown, 7 - RightDown")
-        
-        success = False
-        
-        while not success:
-            move = input()
 
-            squares = move.split(" ")
+        #Max 60 frames per second
+        clock.tick(60)
 
-            if len(squares) != 2:
-                success = False
-            else:
-                destination = None
+        turn_ended = False
+        while not turn_ended:
+            # Handle Input Events
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    turn_ended = True
+                    finished = True
+                    winner = "GameClosed"
+                    break
 
-                if squares[1] == "0":
-                    destination = Direction.Up
-                elif squares[1] == "1":
-                    destination = Direction.Down
-                elif squares[1] == "2":
-                    destination = Direction.Left
-                elif squares[1] == "3":
-                    destination = Direction.Right
-                elif squares[1] == "4":
-                    destination = Direction.LeftUp
-                elif squares[1] == "5":
-                    destination = Direction.RightUp
-                elif squares[1] == "6":
-                    destination = Direction.LeftDown
-                elif squares[1] == "7":
-                    destination = Direction.RightDown
+                elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                    turn_ended = True
+                    finished = True
+                    winner = "GameClosed"
+                    break
 
-                if destination != None:
-                    origin_x, origin_y = Neutron.square_to_index(squares[0])
+                elif event.type == MOUSEBUTTONDOWN:
+                    game.gui.state.handle_mouse_down()
 
-                    success = game.move_piece(origin_x, origin_y, destination)
-                else:
-                    success = False
+                elif event.type == MOUSEBUTTONUP:
+                    game.gui.state.handle_mouse_up()
 
-            if not success:
-                print("Bad input!\n")
+                elif event.type == KEYDOWN and event.key == K_SPACE:
+                    print("ESPACOOOOOOOOOOOOOO")
 
-        finished, winner = game.has_finished()
+                # turn_ended = True
+                finished, winner = game.has_finished()
 
-    print("Winner: " + winner.value)
+        game.gui.display()
 
-    # minimax(game)
+    print("Winner: " + winner)
+    pygame.quit()
 
 
 if __name__ == '__main__':
-    #main()
-    test_board = [['B', 'B', 'E', 'B', 'B'],
-                  ['E', 'B', 'R', 'B', 'E'],
-                  ['E', 'R', 'N', 'R', 'E'],
-                  ['E', 'B', 'R', 'B', 'E'],
-                  ['R', 'R', 'E', 'R', 'R']]
-
-    test_board2 = [['B', 'B', 'E', 'B', 'B', 'E', 'E'],
-                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
-                  ['E', 'R', 'N', 'R', 'E', 'E', 'E'],
-                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
-                  ['R', 'R', 'E', 'R', 'R', 'E', 'E'],
-                  ['E', 'B', 'R', 'B', 'E', 'E', 'E'],
-                  ['E', 'B', 'R', 'B', 'E', 'E', 'E']]
-
-    gui = game_gui.GameGui(test_board2, game_gui.BoardTypes.Board_7X7)
-    gui.game_loop()
+    main()

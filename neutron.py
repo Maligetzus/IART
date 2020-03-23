@@ -1,22 +1,26 @@
 import neutron_util as nutils
-from neutron_util import Player, Turn, Direction, Tile
+from neutron_util import Player, Turn, Direction, Tile, BoardTypes
 import copy
+from game_gui import GameGui
 
 
 class Neutron:
 
-    def __init__(self, size, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1)):
-        self.size = size
+    def __init__(self, board_type, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1)):
+        self.board_type = board_type
+        if board_type == BoardTypes.Board_5X5:
+            self.size = 5
+        else:
+            self.size = 7
         self.turn = turn
         self.curr_player = curr_player
-        self.state = state
+        self.state = state #AKA Board
         self.neutron_position = neutron_position
 
     def start(self, starting_player=Player.White):
         """
         Initializes the game.
         """
-
         if self.size < 3 or self.size % 2 == 0:
             return False, "Board length has to be an odd number bigger than 2"
 
@@ -39,6 +43,7 @@ class Neutron:
                     row.append(Tile.Empty)
 
             self.state.append(row)
+            self.gui = GameGui(self.state, self.board_type)
 
         return True, "Successfuly started the game"
 

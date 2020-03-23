@@ -1,7 +1,9 @@
 import pygame
 from pygame.locals import *
 from gui_utils import *
+from neutron_util import BoardTypes
 import gui_state
+from neutron_util import Tile
 
 
 class GameGui:
@@ -81,9 +83,9 @@ class GameGui:
                                         self.constants.BORDER_SIZE + curr_line_number * self.constants.TYLE_SIZE
                                         + self.constants.BEETWEEN_TYLE_SIZE * curr_line_number + self.constants.PIECE_OFFSET)
 
-                if tile == 'R':
+                if tile == Tile.White:
                     self.screen.blit(self.red_piece_image, current_piece_coords)
-                elif tile == 'B':
+                elif tile == Tile.Black:
                     self.screen.blit(self.blue_piece_image, current_piece_coords)
 
                 curr_col_number += 1
@@ -92,35 +94,3 @@ class GameGui:
             curr_line_number += 1
 
         pygame.display.flip()
-
-    def game_loop(self):
-        ## Display The Background
-        # self.screen.blit(self.background, (0, 0))
-        # pygame.display.flip()
-
-        # Prepare Game Objects
-        clock = pygame.time.Clock()
-
-        # Main Loop
-        going = True
-        while going:
-            clock.tick(60)
-
-            # Handle Input Events
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    going = False
-                elif event.type == KEYDOWN and event.key == K_ESCAPE:
-                    going = False
-                elif event.type == MOUSEBUTTONDOWN:
-                    self.state.handle_mouse_down()
-
-                elif event.type == KEYDOWN and event.key == K_SPACE:
-                    print("ESPACOOOOOOOOOOOOOO")
-
-                elif event.type == MOUSEBUTTONUP:
-                    self.state.handle_mouse_up()
-
-            self.display()
-
-        pygame.quit()

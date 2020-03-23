@@ -1,4 +1,5 @@
 from enum import Enum
+from neutron_util import BoardTypes
 
 class BoardConstants:
     def __init__(self, board_type):
@@ -9,10 +10,6 @@ class BoardConstants:
         self.BORDER_SIZE = 0
         self.PIECE_OFFSET = 0
         self.BEETWEEN_TYLE_SIZE = 0
-
-class BoardTypes(Enum):
-    Board_5X5 = 1
-    Board_7X7 = 2
 
 class GestureDirection(Enum):
     MovXPos = 1
