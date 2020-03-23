@@ -15,14 +15,15 @@ class Turn(Enum):
 
 
 class Direction(Enum):
-    Up = 0
-    Down = 1
-    Left = 2
-    Right = 3
-    LeftUp = 4
-    RightUp = 5
-    LeftDown = 6
-    RightDown = 7
+    Up = 0  #MovYPos
+    Down = 1  #MovYNeg
+    Left = 2  #MovXNeg
+    Right = 3  #MovXPos
+    LeftUp = 4  #MovXNegYPos
+    RightUp = 5  #MovXPosYPos
+    LeftDown = 6  #MovXNegYNeg
+    RightDown = 7  #MovXPosYNeg
+    NotReallyADirection = 8
 
 
 class Tile(Enum):

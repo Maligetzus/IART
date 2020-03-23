@@ -20,21 +20,22 @@ def main():
 
         print(game.curr_player.value + " player, play " + game.turn.value + " (ex.: E1 5)")
 
-        #Max 60 frames per second
-        clock.tick(60)
+        current_turn = game.curr_player
+        quit_pressed = False
+        while game.curr_player == current_turn and not quit_pressed:
+            # Max 60 frames per second
+            clock.tick(60)
 
-        turn_ended = False
-        while not turn_ended:
             # Handle Input Events
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    turn_ended = True
+                    quit_pressed = True
                     finished = True
                     winner = "GameClosed"
                     break
 
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
-                    turn_ended = True
+                    quit_pressed = True
                     finished = True
                     winner = "GameClosed"
                     break
@@ -51,7 +52,7 @@ def main():
                 # turn_ended = True
                 finished, winner = game.has_finished()
 
-        game.gui.display()
+            game.gui.display()
 
     print("Winner: " + winner)
     pygame.quit()

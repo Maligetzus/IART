@@ -7,8 +7,9 @@ from neutron_util import Tile
 
 
 class GameGui:
-    def __init__(self, board, type):
-        self.board = board
+    def __init__(self, game, type):
+        self.game = game
+        self.board = game.state
         self.constants = BoardConstants(type)
         self.init_window()
         self.load_resources()
@@ -94,3 +95,6 @@ class GameGui:
             curr_line_number += 1
 
         pygame.display.flip()
+
+    def call_move(self, piece, direction):
+        self.game.move_piece(piece[0], piece[1], direction)

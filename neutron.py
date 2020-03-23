@@ -43,7 +43,7 @@ class Neutron:
                     row.append(Tile.Empty)
 
             self.state.append(row)
-            self.gui = GameGui(self.state, self.board_type)
+            self.gui = GameGui(self, self.board_type)
 
         return True, "Successfuly started the game"
 
