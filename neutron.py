@@ -75,6 +75,7 @@ class Neutron:
         valid, destination_x, destination_y = self.can_move(origin_x, origin_y, direction)
         
         if not valid:
+            print("Move not Valid!")
             return False
 
         if self.state[origin_x][origin_y] == Tile.Neutron:

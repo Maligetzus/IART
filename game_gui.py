@@ -97,4 +97,4 @@ class GameGui:
         pygame.display.flip()
 
     def call_move(self, piece, direction):
-        self.game.move_piece(piece[0], piece[1], direction)
+        self.game.move_piece(piece[1], piece[0], direction)

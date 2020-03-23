@@ -16,12 +16,12 @@ def main():
     # Prepare Game Objects
     clock = pygame.time.Clock()
 
+    quit_pressed = False
     while not finished:
 
         print(game.curr_player.value + " player, play " + game.turn.value + " (ex.: E1 5)")
 
         current_turn = game.curr_player
-        quit_pressed = False
         while game.curr_player == current_turn and not quit_pressed:
             # Max 60 frames per second
             clock.tick(60)
@@ -31,13 +31,11 @@ def main():
                 if event.type == QUIT:
                     quit_pressed = True
                     finished = True
-                    winner = "GameClosed"
                     break
 
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
                     quit_pressed = True
                     finished = True
-                    winner = "GameClosed"
                     break
 
                 elif event.type == MOUSEBUTTONDOWN:
@@ -54,7 +52,11 @@ def main():
 
             game.gui.display()
 
-    print("Winner: " + winner)
+    if not quit_pressed:
+        print("Winner: " + winner.value)
+    else:
+        print("Game closed by User")
+
     pygame.quit()
 
 
