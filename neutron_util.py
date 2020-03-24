@@ -27,10 +27,10 @@ class Direction(Enum):
 
 
 class Tile(Enum):
-    Empty = 'E'
-    Black = 'B'
-    White = 'W'
-    Neutron = 'N'
+    Empty = 0
+    Black = 1
+    White = 2
+    Neutron = 3
 
 
 def get_score(curr_player, state, neutron_position):
