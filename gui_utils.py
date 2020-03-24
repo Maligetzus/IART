@@ -1,4 +1,5 @@
 from enum import Enum
+from neutron_util import BoardTypes, Tile, Direction
 
 class BoardConstants:
     def __init__(self, board_type):
@@ -9,21 +10,6 @@ class BoardConstants:
         self.BORDER_SIZE = 0
         self.PIECE_OFFSET = 0
         self.BEETWEEN_TYLE_SIZE = 0
-
-class BoardTypes(Enum):
-    Board_5X5 = 1
-    Board_7X7 = 2
-
-class GestureDirection(Enum):
-    MovXPos = 1
-    MovXNeg = 2
-    MovYPos = 3
-    MovYNeg = 4
-    MovXPosYPos = 5
-    MovXPosYNeg = 6
-    MovXNegYPos = 7
-    MovXNegYNeg = 8
-    PieceSelect = 9
 
 class GuiStates(Enum):
     Waiting4Play = 1
@@ -37,25 +23,25 @@ def get_direction(mouse_movement, tyle_size):
 
     if abs(deltaX) > tyle_size/2 and abs(deltaY) > tyle_size/2: #Diagonal
         if deltaX > 0 and deltaY < 0:
-            return GestureDirection.MovXPosYPos
+            return Direction.RightUp
         elif deltaX > 0 and deltaY > 0:
-            return GestureDirection.MovXPosYNeg
+            return Direction.RightDown
         elif deltaX < 0 and deltaY > 0:
-            return GestureDirection.MovXNegYNeg
+            return Direction.LeftDown
         elif deltaX < 0 and deltaY < 0:
-            return GestureDirection.MovXNegYPos
+            return Direction.LeftUp
     elif abs(deltaX) > tyle_size/2: #Horizontal
         if deltaX > 0:
-            return GestureDirection.MovXPos
+            return Direction.Right
         else:
-            return GestureDirection.MovXNeg
+            return Direction.Left
     elif abs(deltaY) > tyle_size/2: #Vertical
         if deltaY > 0:
-            return GestureDirection.MovYNeg
+            return Direction.Down
         else:
-            return GestureDirection.MovYPos
+            return Direction.Up
     else:
-        return GestureDirection.PieceSelect #Not enough movement to count as a direction
+        return Direction.NotReallyADirection #Not enough movement to count as a direction
 
 
 def is_between(coords, top_left_point, bot_right_point):
@@ -94,7 +80,7 @@ def get_board_coords_from_screen_coords(board_constants, mouse_coords):
 
 
 def tile_has_a_piece(board, board_coords):
-    if board[board_coords[1]][board_coords[0]] != 'E':
+    if board[board_coords[1]][board_coords[0]] != Tile.Empty:
         return True
     else:
         return False

@@ -1,28 +1,32 @@
-import enum
+from enum import Enum
 
+class BoardTypes(Enum):
+    Board_5X5 = 1
+    Board_7X7 = 2
 
-class Player(enum.Enum):
+class Player(Enum):
     White = "White"
     Black = "Black"
 
 
-class Turn(enum.Enum):
+class Turn(Enum):
     Neutron = "Neutron"
     Pawn = "Pawn"
 
 
-class Direction(enum.Enum):
-    Up = 0
-    Down = 1
-    Left = 2
-    Right = 3
-    LeftUp = 4
-    RightUp = 5
-    LeftDown = 6
-    RightDown = 7
+class Direction(Enum):
+    Up = 0  #MovYPos
+    Down = 1  #MovYNeg
+    Left = 2  #MovXNeg
+    Right = 3  #MovXPos
+    LeftUp = 4  #MovXNegYPos
+    RightUp = 5  #MovXPosYPos
+    LeftDown = 6  #MovXNegYNeg
+    RightDown = 7  #MovXPosYNeg
+    NotReallyADirection = 8
 
 
-class Tile(enum.Enum):
+class Tile(Enum):
     Empty = 'E'
     Black = 'B'
     White = 'W'
