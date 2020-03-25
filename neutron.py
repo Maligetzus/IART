@@ -160,7 +160,18 @@ class Neutron:
             print(chr(65 + i), end=" ")
 
             for j in range(0, len(self.state[i])):
-                print(self.state[i][j].value, end=" ")
+                symbol = ""
+
+                if self.state[i][j] == Tile.Empty:
+                    symbol = "E"
+                elif self.state[i][j] == Tile.White:
+                    symbol = "W"
+                elif self.state[i][j] == Tile.Black:
+                    symbol = "B"
+                else:
+                    symbol = "N"
+
+                print(symbol, end=" ")
 
             print("\n", end="")
 
