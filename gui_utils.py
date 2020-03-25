@@ -41,7 +41,7 @@ def get_direction(mouse_movement, tyle_size):
         else:
             return Direction.Up
     else:
-        return Direction.NotReallyADirection #Not enough movement to count as a direction
+        return None #Not enough movement to count as a direction
 
 
 def is_between(coords, top_left_point, bot_right_point):

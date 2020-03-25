@@ -64,7 +64,7 @@ class Neutron:
         return self.__move_piece(self, origin_x, origin_y, direction)
 
     def hypothetical_move_piece(self, origin_x, origin_y, direction):
-        game = Neutron(self.size, self.curr_player, self.turn, copy.deepcopy(self.state), self.neutron_position)
+        game = Neutron(self.board_type, self.curr_player, self.turn, copy.deepcopy(self.state), self.neutron_position)
         
         success = self.__move_piece(game, origin_x, origin_y, direction)
 

@@ -23,7 +23,6 @@ class Direction(Enum):
     RightUp = 5  #MovXPosYPos
     LeftDown = 6  #MovXNegYNeg
     RightDown = 7  #MovXPosYNeg
-    NotReallyADirection = 8
 
 
 class Tile(Enum):

@@ -11,7 +11,7 @@ class GuiState:
         if self.current_state == GuiStates.RegisteringPlay:
             gesture = pygame.mouse.get_rel()
             direction = get_direction(gesture, self.board_gui.constants.TYLE_SIZE)
-            if direction == Direction.NotReallyADirection: #invalidate
+            if direction == None: #invalidate
                 self.current_state = GuiStates.Waiting4Play
                 self.selected_piece = (-1, -1)
             else:
