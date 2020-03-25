@@ -25,6 +25,7 @@ class GameGui:
         # Load Pieces and Board
         self.red_piece_image = pygame.image.load('resources/piece_red.png')
         self.blue_piece_image = pygame.image.load('resources/piece_blue.png')
+        self.neutron_piece_image = pygame.image.load('resources/piece_neutron.png')
         self.game_board_tile = pygame.image.load('resources/board_tile.png')
 
         if (self.constants.BOARD_TYPE == BoardTypes.Board_7X7):
@@ -41,6 +42,7 @@ class GameGui:
 
         self.red_piece_image = pygame.transform.scale(self.red_piece_image, (piece_new_side, piece_new_side))
         self.blue_piece_image = pygame.transform.scale(self.blue_piece_image, (piece_new_side, piece_new_side))
+        self.neutron_piece_image = pygame.transform.scale(self.neutron_piece_image, (piece_new_side, piece_new_side))
         self.game_board_tile = pygame.transform.scale(self.game_board_tile, (tile_new_side, tile_new_side))
 
     def register_constants(self):
@@ -88,6 +90,8 @@ class GameGui:
                     self.screen.blit(self.red_piece_image, current_piece_coords)
                 elif tile == Tile.Black:
                     self.screen.blit(self.blue_piece_image, current_piece_coords)
+                elif tile == Tile.Neutron:
+                    self.screen.blit(self.neutron_piece_image, current_piece_coords)
 
                 curr_col_number += 1
 
