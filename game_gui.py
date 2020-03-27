@@ -1,7 +1,8 @@
 import pygame
+from pygame import Surface
 from pygame.locals import *
 from gui_utils import *
-from neutron_util import BoardTypes
+from neutron_util import BoardTypes, Player, Turn
 import gui_state
 from neutron_util import Tile
 
@@ -18,10 +19,13 @@ class GameGui:
 
     def init_window(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 800), HWSURFACE | DOUBLEBUF | RESIZABLE)
+        self.screen = pygame.display.set_mode((1200, 800), HWSURFACE | DOUBLEBUF | RESIZABLE)
         pygame.display.set_caption("Neutron")
 
     def load_resources(self):
+        #Side Panel font
+        self.side_panel_font = pygame.font.SysFont(None, 50, False)
+
         # Load Pieces and Board
         self.red_piece_image = pygame.image.load('resources/piece_red.png')
         self.blue_piece_image = pygame.image.load('resources/piece_blue.png')
@@ -61,10 +65,40 @@ class GameGui:
         self.background = self.background.convert()
         self.background.fill((0, 0, 0))
 
+    def display_side_panel(self):
+        side_panel = Surface((350, 750))
+        s_height = side_panel.get_height()
+        s_width = side_panel.get_width()
+
+        #Game mode indicator section
+        draw_text("Game Mode", self.side_panel_font, (255, 255, 255), side_panel, 0, 25, True, False)
+        draw_text("Player vs Player", self.side_panel_font, (255, 255, 255), side_panel, 0, 75, True, False)# TODO
+
+        #Turn indicator section
+        draw_text("Turn", self.side_panel_font, (255, 255, 255), side_panel, 0, 175, True, False)
+        if self.game.curr_player == Player.White:
+            player_color = (255, 1, 1) #Red piece color
+        else:
+            player_color = (1, 129, 129) #Blue piece color
+        draw_text("Player", self.side_panel_font, player_color, side_panel, 0, 225, True, False)
+
+        #To move section
+        draw_text("To move", self.side_panel_font, (255, 255, 255), side_panel, 0, 325, True, False)
+        if self.game.turn == Turn.Pawn:
+            move_text = "Pawn"
+        else:
+            move_text = "Neutron"
+        draw_text(move_text, self.side_panel_font, (255, 255, 255), side_panel, 0, 375, True, False)
+
+        side_panel_draw_x = 3*self.constants.BORDER_SIZE + self.constants.BOARD_SIZE
+        side_panel_draw_y = self.constants.BORDER_SIZE
+        self.screen.blit(side_panel, (side_panel_draw_x, side_panel_draw_y))
+
     # Draws Everything
     def display(self):
         # Background
         self.screen.blit(self.background, (0, 0))
+        self.display_side_panel()
 
         # Board
         curr_line_number = 0

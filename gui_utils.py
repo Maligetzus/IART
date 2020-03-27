@@ -1,6 +1,7 @@
 from enum import Enum
 from neutron_util import BoardTypes, Tile, Direction
 
+
 class BoardConstants:
     def __init__(self, board_type):
         self.BOARD_TYPE = board_type
@@ -10,6 +11,7 @@ class BoardConstants:
         self.BORDER_SIZE = 0
         self.PIECE_OFFSET = 0
         self.BEETWEEN_TYLE_SIZE = 0
+
 
 class GuiStates(Enum):
     Waiting4Play = 1
@@ -84,3 +86,19 @@ def tile_has_a_piece(board, board_coords):
         return True
     else:
         return False
+
+
+def draw_text(text, font, color, surface, x, y, center_text_x=False, center_text_y=False):
+    textobj = font.render(text, 1, color)
+
+    if center_text_x and center_text_y:
+        textrect = textobj.get_rect(center=(surface.get_width() / 2, surface.get_height() / 2))
+    elif center_text_x:
+        textrect = textobj.get_rect(center=(surface.get_width() / 2, y))
+    elif center_text_y:
+        textrect = textobj.get_rect(center=(x, surface.get_height() / 2))
+    else:
+        textrect = textobj.get_rect()
+        textrect.topleft = (x, y)
+
+    surface.blit(textobj, textrect)

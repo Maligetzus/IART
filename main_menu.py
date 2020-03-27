@@ -1,6 +1,7 @@
 import pygame, sys
 from pygame.locals import *
 from game_loop import game_loop
+from gui_utils import draw_text
 
 
 class MainMenu:
@@ -14,12 +15,6 @@ class MainMenu:
         # Resources
         self.game_image = pygame.image.load('resources/main_menu.jpg')
 
-    @staticmethod
-    def draw_text(text, font, color, surface, x, y):
-        textobj = font.render(text, 1, color)
-        textrect = textobj.get_rect()
-        textrect.topleft = (x, y)
-        surface.blit(textobj, textrect)
 
     def start(self):
         while True:
@@ -39,9 +34,9 @@ class MainMenu:
                     pygame.quit()
                     sys.exit()
             pygame.draw.rect(self.screen, (0, 0, 0), button_1)
-            self.draw_text("Play", self.font, (255, 255, 255), self.screen, 142, 410)
+            draw_text("Play", self.font, (255, 255, 255), self.screen, 142, 410, False, False)
             pygame.draw.rect(self.screen, (0, 0, 0), button_2)
-            self.draw_text("Exit", self.font, (255, 255, 255), self.screen, 432, 410)
+            draw_text("Exit", self.font, (255, 255, 255), self.screen, 432, 410, False, False)
 
             click = False
             for event in pygame.event.get():

@@ -1,8 +1,10 @@
 from enum import Enum
 
+
 class BoardTypes(Enum):
     Board_5X5 = 1
     Board_7X7 = 2
+
 
 class Player(Enum):
     White = "White"
