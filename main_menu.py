@@ -7,7 +7,7 @@ from gui_utils import draw_text
 class MainMenu:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption('game base')
+        pygame.display.set_caption('Neutron')
         self.screen = pygame.display.set_mode((650, 500), 0, 32)
         self.mainClock = pygame.time.Clock()
         self.font = pygame.font.SysFont(None, 42, False)
