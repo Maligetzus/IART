@@ -4,6 +4,10 @@ from neutron_util import BoardTypes
 from pygame.locals import *
 
 
+def restore_menu_dimensions(game):
+    game.gui.screen = pygame.display.set_mode((650, 500), 0, 32)
+
+
 def game_loop():
     game = Neutron(BoardTypes.Board_5X5)
     game.start()
@@ -34,6 +38,7 @@ def game_loop():
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
                     esc_pressed = True
                     finished = True
+                    restore_menu_dimensions(game)
                     break
 
                 elif event.type == MOUSEBUTTONDOWN:
@@ -54,3 +59,4 @@ def game_loop():
         print("Game ended, returning to main menu!")
     else:
         print("Winner: " + winner.value)  #Prints winner; Returns to main menu
+        restore_menu_dimensions(game)
