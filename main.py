@@ -25,7 +25,7 @@ def main():
             clock.tick(60)
             
             if game.curr_player == Player.Black:
-                neutronMove, pawnCoord, pawnMove = neutron_util.get_next_move(game, 1, 2)
+                neutronMove, pawnCoord, pawnMove = neutron_util.get_next_move(game, 1, 3)
 
                 if neutronMove != None:
                     game.move_piece(game.neutron_position[0], game.neutron_position[1], neutronMove)

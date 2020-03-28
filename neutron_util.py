@@ -104,13 +104,13 @@ def minimax(node, level, max_depth, depth=0, maximum=True, alpha=-1000, beta=100
                                     newValue = min(value, minimax(newNode, level, max_depth, depth + 1, not maximum, alpha, beta))
                                     beta = min(beta, newValue)
 
-                                if alpha >= beta:
-                                    break
-
                                 newNode.value = newValue
                                 node.add_child(newNode)
 
                                 value = newValue
+
+                                if alpha >= beta:
+                                    break
 
                         if alpha >= beta:
                             break
