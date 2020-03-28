@@ -54,25 +54,24 @@ class Node:
 def get_next_move(game, level, max_depth):
     head = Node(game=game)
 
-    value = minimax(head, level, max_depth)
+    value = minimax(head, game.curr_player, level, max_depth)
 
     for child in head.children:
         if(child.value == value):
             return child.neutronMove, child.pawnCoord, child.pawnMove
 
 
-def minimax(node, level, max_depth, depth=0, maximum=True, alpha=-1000, beta=1000):
-    player = Player.White if node.game.curr_player != Player.White else Player.Black
+def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, beta=1000):
     player_tile = Tile.White if node.game.curr_player == Player.White else Tile.Black
     
     if victory_player(player, node.game.state):
-        return 900  # TODO: Check if this value is okay
+        return 999
     elif victory_opponent(player, node.game.state) or num_empty_fields_around_neutron(node.game.state, node.game.neutron_position) == 0:
-        return -900 # TODO: Check if this value is okay        
+        return -999        
     elif depth == max_depth:
         return get_score(player, node.game.state, node.game.neutron_position)
 
-    value = -1000 if maximum else 1000   # TODO: Check if this value is okay
+    value = -1000 if maximum else 1000
 
     for direction_neutron in Direction:
 
@@ -82,6 +81,8 @@ def minimax(node, level, max_depth, depth=0, maximum=True, alpha=-1000, beta=100
             success = True
         else:
             success, newGame_neutron = node.game.hypothetical_move_piece(node.game.neutron_position[0], node.game.neutron_position[1], direction_neutron)
+
+        # TODO: check if neutron move causes victory
 
         if(success):
             pawn_count = 0
@@ -97,11 +98,13 @@ def minimax(node, level, max_depth, depth=0, maximum=True, alpha=-1000, beta=100
                             if(success):
                                 newNode = Node(game=newGame_pawn, neutronMove=direction_neutron, pawnCoord=(i, j), pawnMove=direction_pawn)
 
+                                newValueMinimax = minimax(newNode, player, level, max_depth, depth + 1, not maximum, alpha, beta)
+
                                 if maximum:
-                                    newValue = max(value, minimax(newNode, level, max_depth, depth + 1, not maximum, alpha, beta))
+                                    newValue = max(value, newValueMinimax)
                                     alpha = max(alpha, newValue)
                                 else:
-                                    newValue = min(value, minimax(newNode, level, max_depth, depth + 1, not maximum, alpha, beta))
+                                    newValue = min(value, newValueMinimax)
                                     beta = min(beta, newValue)
 
                                 newNode.value = newValue
