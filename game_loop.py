@@ -20,9 +20,6 @@ def game_loop():
     quit_pressed = False
     esc_pressed = False
     while not finished:
-
-        print(game.curr_player.value + " player, play " + game.turn.value + " (ex.: E1 5)")
-
         current_turn = game.turn
         while game.turn == current_turn and not (quit_pressed or esc_pressed):
             # Max 60 frames per second

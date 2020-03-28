@@ -81,6 +81,11 @@ def get_board_coords_from_screen_coords(board_constants, mouse_coords):
         return (-1, -1)
 
 
+def get_resource_coords_from_board_coords(board_constants, piece_coords):
+    return (board_constants.BORDER_SIZE + board_constants.PIECE_OFFSET + piece_coords[0]*(board_constants.TYLE_SIZE + board_constants.BEETWEEN_TYLE_SIZE),
+            board_constants.BORDER_SIZE + board_constants.PIECE_OFFSET +  piece_coords[1]*(board_constants.TYLE_SIZE + board_constants.BEETWEEN_TYLE_SIZE))
+
+
 def tile_has_a_piece(board, board_coords):
     if board[board_coords[1]][board_coords[0]] != Tile.Empty:
         return True

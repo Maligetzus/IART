@@ -21,6 +21,7 @@ class GameGui:
         pygame.init()
         self.screen = pygame.display.set_mode((1200, 800), HWSURFACE | DOUBLEBUF | RESIZABLE)
         pygame.display.set_caption("Neutron")
+        self.animation_piece = None
 
     def load_resources(self):
         #Side Panel font
@@ -94,6 +95,17 @@ class GameGui:
         side_panel_draw_y = self.constants.BORDER_SIZE
         self.screen.blit(side_panel, (side_panel_draw_x, side_panel_draw_y))
 
+    def get_resource(self, tile):
+        if tile == Tile.White:
+            return self.red_piece_image
+        elif tile == Tile.Black:
+            return self.blue_piece_image
+        elif tile == Tile.Neutron:
+            #TODO
+            return self.blue_piece_image
+        else:
+            return None
+
     # Draws Everything
     def display(self):
         # Background
@@ -118,15 +130,19 @@ class GameGui:
                                         self.constants.BORDER_SIZE + curr_line_number * self.constants.TYLE_SIZE
                                         + self.constants.BEETWEEN_TYLE_SIZE * curr_line_number + self.constants.PIECE_OFFSET)
 
-                if tile == Tile.White:
-                    self.screen.blit(self.red_piece_image, current_piece_coords)
-                elif tile == Tile.Black:
-                    self.screen.blit(self.blue_piece_image, current_piece_coords)
+                curr_piece_image = self.get_resource(tile)
+                if curr_piece_image != None:
+                    self.screen.blit(curr_piece_image, current_piece_coords)
 
                 curr_col_number += 1
 
             curr_col_number = 0
             curr_line_number += 1
+
+        # Animation display
+        if self.animation_piece != None:
+            self.screen.blit(self.animation_piece, self.animation_piece_coords)
+            self.animation_piece = None
 
         pygame.display.flip()
 

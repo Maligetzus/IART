@@ -1,5 +1,5 @@
 from enum import Enum
-
+import time
 
 class BoardTypes(Enum):
     Board_5X5 = 1
@@ -181,3 +181,6 @@ def victory(player, state):
             if tile == Tile.Neutron:
                 return 1
     return 0
+
+def get_time_miliseconds():
+    return int(round(time.time() * 1000))

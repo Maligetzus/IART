@@ -44,7 +44,7 @@ class Neutron:
 
             self.state.append(row)
             self.gui = GameGui(self, self.board_type)
-            self.animator = Animator(self.gui.constants)
+            self.animator = Animator(self.gui)
 
         return True, "Successfuly started the game"
 
@@ -83,11 +83,16 @@ class Neutron:
         if origin_piece == Tile.Neutron:
             self.neutron_position = destination_x, destination_y
 
-        #Move animation
-        self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x)
 
-        self.state[origin_x][origin_y], self.state[destination_x][destination_y] = \
-            self.state[destination_x][destination_y], self.state[origin_x][origin_y]
+        self.state[origin_x][origin_y] = Tile.Empty
+
+        #Move animation
+        self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x, 1)
+
+        self.state[destination_x][destination_y] = origin_piece
+
+        # self.state[origin_x][origin_y], self.state[destination_x][destination_y] = \
+        #     self.state[destination_x][destination_y], self.state[origin_x][origin_y]
 
         if self.turn == Turn.Pawn:
             self.curr_player = Player.White if self.curr_player != Player.White else Player.Black
