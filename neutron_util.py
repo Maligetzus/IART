@@ -6,6 +6,12 @@ class BoardTypes(Enum):
     Board_7X7 = 2
 
 
+class PlayerTypes(Enum):
+    Player = "Player"
+    CpuL1 = "CPU LVL1"
+    CpuL2 = "CPU LVL2"
+
+
 class Player(Enum):
     White = "White"
     Black = "Black"

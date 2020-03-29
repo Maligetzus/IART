@@ -14,8 +14,9 @@ class Neutron:
             self.size = 7
         self.turn = turn
         self.curr_player = curr_player
-        self.state = state #AKA Board
+        self.state = state  # AKA Board
         self.neutron_position = neutron_position
+        self.player_type = {'White': None, 'Black': None}
 
     def start(self, starting_player=Player.White):
         """
@@ -86,7 +87,7 @@ class Neutron:
         self.state[origin_x][origin_y] = Tile.Empty
 
         #Move animation
-        self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x, 1)
+        self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x, 0.5)
 
         self.state[destination_x][destination_y] = origin_piece
 
