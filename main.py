@@ -5,6 +5,7 @@ from neutron_util import Direction, BoardTypes, Player
 import game_gui
 from pygame.locals import *
 
+
 def main():
     game = Neutron(BoardTypes.Board_5X5)
     game.start()
