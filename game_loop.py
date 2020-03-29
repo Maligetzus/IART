@@ -20,7 +20,7 @@ class GameLoop:
         self.pawn_lvl2_coords = None
 
     def restore_menu_dimensions(self):
-        self.game.gui.screen = pygame.display.set_mode((650, 500), 0, 32)
+        self.game.gui.screen = pygame.display.set_mode((650, 575), 0, 32)
 
     # Returns finished, quit_pressed, esc_pressed
     def handle_player_input(self):
