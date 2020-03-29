@@ -1,6 +1,6 @@
 import pygame, sys
 from pygame.locals import *
-from game_loop import game_loop
+from game_loop import GameLoop
 from gui_utils import draw_text
 from neutron_util import PlayerTypes
 
@@ -28,7 +28,8 @@ class MainMenu:
             button_2 = pygame.Rect(360, 400, 200, 45)
             if button_1.collidepoint((mx, my)):
                 if click:
-                    game_loop(PlayerTypes.Player, PlayerTypes.CpuL1)
+                    gl = GameLoop(PlayerTypes.Player, PlayerTypes.CpuL2)
+                    gl.game_loop()
             if button_2.collidepoint((mx, my)):
                 if click:
                     pygame.quit()

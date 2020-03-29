@@ -87,7 +87,7 @@ class Neutron:
         self.state[origin_x][origin_y] = Tile.Empty
 
         #Move animation
-        self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x, 0.5)
+        #self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x, 0.5)
 
         self.state[destination_x][destination_y] = origin_piece
 

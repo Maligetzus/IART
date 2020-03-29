@@ -1,93 +1,99 @@
 import pygame
+import time
 from neutron import Neutron
 from neutron_util import BoardTypes, PlayerTypes
 from pygame.locals import *
-from neutron_util import get_next_move
+from neutron_util import get_next_move, Turn
 
 
-def restore_menu_dimensions(game):
-    game.gui.screen = pygame.display.set_mode((650, 500), 0, 32)
+class GameLoop:
+    def __init__(self, player1_type, player2_type):
+        self.game = Neutron(BoardTypes.Board_5X5)
+        self.game.start()
 
-# Returns finished, quit_pressed, esc_pressed
-def handle_player_input(game):
-    # Handle Input Events
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            return True, True, False
+        self.game.player_type['White'] = player1_type
+        self.game.player_type['Black'] = player2_type
+        print(self.game.player_type['White'], " // ", self.game.player_type['Black'])
 
-        elif event.type == KEYDOWN and event.key == K_ESCAPE:
-            restore_menu_dimensions(game)
-            return True, False, True
+        self.pawn_lvl1_move = None
+        self.pawn_lvl1_coords = None
+        self.pawn_lvl2_move = None
+        self.pawn_lvl2_coords = None
 
-        elif event.type == MOUSEBUTTONDOWN:
-            game.gui.state.handle_mouse_down()
+    def restore_menu_dimensions(self):
+        self.game.gui.screen = pygame.display.set_mode((650, 500), 0, 32)
 
-        elif event.type == MOUSEBUTTONUP:
-            game.gui.state.handle_mouse_up()
+    # Returns finished, quit_pressed, esc_pressed
+    def handle_player_input(self):
+        # Handle Input Events
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                return True, True, False
 
-    return False, False, False
+            elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                self.restore_menu_dimensions()
+                return True, False, True
 
-def handle_bot_play(game):
-    if game.player_type[game.curr_player.value] == PlayerTypes.CpuL1:
-        return handle_bot_l1_play(game)
-    else:
-        return handle_bot_l2_play(game)
+            elif event.type == MOUSEBUTTONDOWN:
+                self.game.gui.state.handle_mouse_down()
 
+            elif event.type == MOUSEBUTTONUP:
+                self.game.gui.state.handle_mouse_up()
 
-def handle_bot_l1_play(game):
-    print("Bot LVL1 turn")
-    finished, winner = game.has_finished()
-    return finished, winner
+        return False, False, False
 
-
-def handle_bot_l2_play(game):
-    neutron_move, pawn_coord, pawn_move = get_next_move(game, 1, 3)
-
-    if neutron_move != None:
-        game.move_piece(game.neutron_position[0], game.neutron_position[1], neutron_move)
-
-    finished, winner = game.has_finished()
-
-    if not finished:
-        game.move_piece(pawn_coord[0], pawn_coord[1], pawn_move)
-        finished, winner = game.has_finished()
-
-    return finished, winner
-
-
-def game_loop(player1_type, player2_type):
-    game = Neutron(BoardTypes.Board_5X5)
-    game.start()
-
-    game.player_type['White'] = player1_type
-    game.player_type['Black'] = player2_type
-    print(game.player_type['White'], " // ", game.player_type['Black'])
-
-    finished, winner = game.has_finished()
-
-    clock = pygame.time.Clock()
-    quit_pressed = False
-    esc_pressed = False
-    while not finished:
-        # Max 60 frames per second
-        clock.tick(60)
-
-        current_turn = game.turn
-        if game.player_type[game.curr_player.value] == PlayerTypes.Player:
-            finished, quit_pressed, esc_pressed = handle_player_input(game)
+    def handle_bot_play(self):
+        if self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL1:
+            return self.handle_bot_l1_play()
         else:
-            finished, winner = handle_bot_play(game)
+            return self.handle_bot_l2_play()
 
-        if not finished and game.turn != current_turn:
-            finished, winner = game.has_finished()
+    def handle_bot_l1_play(self):
+        print("Bot LVL1 turn")
+        finished, winner = self.game.has_finished()
+        return finished, winner
 
-        game.gui.display()
+    def handle_bot_l2_play(self):
+        if self.pawn_lvl2_move == None:
+            neutron_move, self.pawn_lvl2_coords, self.pawn_lvl2_move = get_next_move(self.game, 1, 3)
 
-    if quit_pressed:  #Closes window
-        pygame.quit()
-        print("Game closed by User")
-    elif esc_pressed:  #Returns to main menu
-        print("Game ended, returning to main menu!")
-    else:
-        print("Winner: " + winner.value)  #Prints winner; Returns to main menu
-        restore_menu_dimensions(game)
+        if self.game.turn == Turn.Neutron:
+            self.game.move_piece(self.game.neutron_position[0], self.game.neutron_position[1], neutron_move)
+        elif self.game.turn == Turn.Pawn:
+            self.game.move_piece(self.pawn_lvl2_coords[0], self.pawn_lvl2_coords[1], self.pawn_lvl2_move)
+            self.pawn_lvl2_coords = None
+            self.pawn_lvl2_move = None
+
+        finished, winner = self.game.has_finished()
+        return finished, winner
+
+
+    def game_loop(self):
+        finished, winner = self.game.has_finished()
+
+        clock = pygame.time.Clock()
+        quit_pressed = False
+        esc_pressed = False
+        while not finished:
+            # Max 60 frames per second
+            clock.tick(60)
+
+            current_turn = self.game.turn
+            if self.game.player_type[self.game.curr_player.value] == PlayerTypes.Player:
+                finished, quit_pressed, esc_pressed = self.handle_player_input()
+            else:
+                finished, winner = self.handle_bot_play()
+
+            if not finished and self.game.turn != current_turn:
+                finished, winner = self.game.has_finished()
+
+            self.game.gui.display()
+
+        if quit_pressed:  # Closes window
+            pygame.quit()
+            print("Game closed by User")
+        elif esc_pressed:  # Returns to main menu
+            print("Game ended, returning to main menu!")
+        else:
+            print("Winner: " + winner.value)  # Prints winner; Returns to main menu
+            self.restore_menu_dimensions()
