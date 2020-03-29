@@ -65,7 +65,7 @@ class Neutron:
 
     def hypothetical_move_piece(self, origin_x, origin_y, direction):
         game = Neutron(self.board_type, self.curr_player, self.turn, copy.deepcopy(self.state), self.neutron_position)
-        
+
         success = self.__move_piece(game, origin_x, origin_y, direction)
 
         return success, game
@@ -73,7 +73,7 @@ class Neutron:
     @staticmethod
     def __move_piece(self, origin_x, origin_y, direction):
         valid, destination_x, destination_y = self.can_move(origin_x, origin_y, direction)
-        
+
         if not valid:
             return False
 
@@ -111,13 +111,13 @@ class Neutron:
 
         if direction == Direction.Down or direction == Direction.LeftDown or direction == Direction.RightDown:
             move_x = 1
-        
+
         if direction == Direction.Up or direction == Direction.LeftUp or direction == Direction.RightUp:
             move_x = -1
 
         if direction == Direction.Right or direction == Direction.RightUp or direction == Direction.RightDown:
             move_y = 1
-        
+
         if direction == Direction.Left or direction == Direction.LeftUp or direction == Direction.LeftDown:
             move_y = -1
 
@@ -175,6 +175,26 @@ class Neutron:
             print("\n", end="")
 
         print("\n", end="")
+
+    def hash_state(self):
+        result = 0
+        current_prime = 1
+        for i in range(0, self.size):
+            for j in range(0, self.size):
+                result += self.state[i][j] * current_prime
+                current_prime = self.__find_next_prime(current_prime)
+        return result
+
+    @staticmethod
+    def __find_next_prime(n):
+        a = n
+        b = 2*n
+        for p in range(a, b):
+            for i in range(2, p):
+                if p % i == 0:
+                    break
+            else:
+                return p
 
     @staticmethod
     def square_to_index(square):

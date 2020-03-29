@@ -1,8 +1,12 @@
 from enum import Enum
 
+seenStates = set()
+
+
 class BoardTypes(Enum):
     Board_5X5 = 1
     Board_7X7 = 2
+
 
 class Player(Enum):
     White = "White"
@@ -40,7 +44,7 @@ class Node:
         self.pawnCoord = pawnCoord
         self.pawnMove = pawnMove
 
-        if children != None:
+        if children is not None:
             self.children = children
         else:
             self.children = []
@@ -57,7 +61,7 @@ def get_next_move(game, level, max_depth):
     value = minimax(head, game.curr_player, level, max_depth)
 
     for child in head.children:
-        if(child.value == value):
+        if child.value == value:
             return child.neutronMove, child.pawnCoord, child.pawnMove
 
 
@@ -71,11 +75,15 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
     elif depth == max_depth:
         return get_score(player, node.game.state, node.game.neutron_position)
 
+    if seenStates.__contains__(node.game.hash_state(node.game.state)):
+        return
+    seenStates.add(node.game.hash_state(node.game.state))
+
     value = -1000 if maximum else 1000
 
     for direction_neutron in Direction:
 
-        if(node.game.turn != Turn.Neutron):
+        if node.game.turn != Turn.Neutron:
             direction_neutron = None
             newGame_neutron = node.game
             success = True
@@ -84,7 +92,7 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
 
         # TODO: check if neutron move causes victory
 
-        if(success):
+        if success:
             pawn_count = 0
 
             for i in range(newGame_neutron.size):
@@ -127,13 +135,14 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
                 if pawn_count == node.game.size:
                     break
 
-        if(node.game.turn != Turn.Neutron):
+        if node.game.turn != Turn.Neutron:
             break
 
         if alpha >= beta:
             break
 
     return value
+
 
 def get_score(curr_player, state, neutron_position):
     return 10 * num_empty_tiles_player(curr_player, state) - 10 * num_empty_tiles_opponent(curr_player, state) +\
