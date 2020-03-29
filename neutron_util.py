@@ -8,8 +8,8 @@ class BoardTypes(Enum):
 
 class PlayerTypes(Enum):
     Player = "Player"
-    CpuL1 = "CPU LVL1"
-    CpuL2 = "CPU LVL2"
+    CpuL1 = "CPU (lvl 1)"
+    CpuL2 = "CPU (lvl 2)"
 
 
 class Player(Enum):

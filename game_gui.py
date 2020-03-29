@@ -75,7 +75,9 @@ class GameGui:
 
         # Game mode indicator section
         draw_text("Game Mode", self.side_panel_font, (255, 255, 255), side_panel, 0, 25, True, False)
-        draw_text("Player vs Player", self.side_panel_font, (255, 255, 255), side_panel, 0, 75, True, False)# TODO
+
+        game_mode_text = self.game.player_type['White'].value + " vs " + self.game.player_type['Black'].value
+        draw_text(game_mode_text, self.side_panel_font, (255, 255, 255), side_panel, 0, 75, True, False)
 
         # Turn indicator section
         draw_text("Turn", self.side_panel_font, (255, 255, 255), side_panel, 0, 175, True, False)
