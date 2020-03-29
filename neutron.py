@@ -17,11 +17,9 @@ class Neutron:
         self.state = state  # AKA Board
         self.neutron_position = neutron_position
         self.player_type = {'White': None, 'Black': None}
+        self.animator = None
 
     def start(self, starting_player=Player.White):
-        """
-        Initializes the game.
-        """
         if self.size < 3 or self.size % 2 == 0:
             return False, "Board length has to be an odd number bigger than 2"
 
@@ -44,8 +42,9 @@ class Neutron:
                     row.append(Tile.Empty)
 
             self.state.append(row)
-            self.gui = GameGui(self, self.board_type)
-            self.animator = Animator(self.gui)
+
+        self.gui = GameGui(self, self.board_type)
+        self.animator = Animator(self.gui)
 
         return True, "Successfuly started the game"
 
@@ -87,7 +86,8 @@ class Neutron:
         self.state[origin_x][origin_y] = Tile.Empty
 
         #Move animation
-        #self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x, 0.5)
+        if self.animator != None:
+            self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x, 0.5)
 
         self.state[destination_x][destination_y] = origin_piece
 

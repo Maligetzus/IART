@@ -9,7 +9,6 @@ from neutron_util import get_next_move, Turn
 class GameLoop:
     def __init__(self, player1_type, player2_type):
         self.game = Neutron(BoardTypes.Board_5X5)
-        self.game.start()
 
         self.game.player_type['White'] = player1_type
         self.game.player_type['Black'] = player2_type
@@ -49,7 +48,7 @@ class GameLoop:
             return self.handle_bot_l2_play()
 
     def handle_bot_l1_play(self):
-        print("Bot LVL1 turn")
+        print("Bot LVL1 turn TODO")
         finished, winner = self.game.has_finished()
         return finished, winner
 
@@ -69,6 +68,7 @@ class GameLoop:
 
 
     def game_loop(self):
+        self.game.start()
         finished, winner = self.game.has_finished()
 
         clock = pygame.time.Clock()
