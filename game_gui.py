@@ -24,7 +24,7 @@ class GameGui:
         self.animation_piece = None
 
     def load_resources(self):
-        #Side Panel font
+        # Side Panel font
         self.side_panel_font = pygame.font.SysFont(None, 50, False)
 
         # Load Pieces and Board
@@ -73,19 +73,19 @@ class GameGui:
         s_height = side_panel.get_height()
         s_width = side_panel.get_width()
 
-        #Game mode indicator section
+        # Game mode indicator section
         draw_text("Game Mode", self.side_panel_font, (255, 255, 255), side_panel, 0, 25, True, False)
         draw_text("Player vs Player", self.side_panel_font, (255, 255, 255), side_panel, 0, 75, True, False)# TODO
 
-        #Turn indicator section
+        # Turn indicator section
         draw_text("Turn", self.side_panel_font, (255, 255, 255), side_panel, 0, 175, True, False)
         if self.game.curr_player == Player.White:
-            player_color = (255, 1, 1) #Red piece color
+            player_color = (209, 27, 94)  # Pink piece color
         else:
-            player_color = (1, 129, 129) #Blue piece color
-        draw_text("Player", self.side_panel_font, player_color, side_panel, 0, 225, True, False)
+            player_color = (27, 209, 142)  # Green piece color
+        draw_text(self.game.player_type[self.game.curr_player.value].value, self.side_panel_font, player_color, side_panel, 0, 225, True, False)
 
-        #To move section
+        # To move section
         draw_text("To move", self.side_panel_font, (255, 255, 255), side_panel, 0, 325, True, False)
         if self.game.turn == Turn.Pawn:
             move_text = "Pawn"

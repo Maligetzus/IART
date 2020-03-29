@@ -4,6 +4,7 @@ from game_loop import GameLoop
 from gui_utils import draw_text
 from neutron_util import PlayerTypes
 
+
 class MainMenu:
     def __init__(self):
         pygame.init()
@@ -14,7 +15,6 @@ class MainMenu:
 
         # Resources
         self.game_image = pygame.image.load('resources/main_menu.jpg')
-
 
     def start(self):
         while True:
@@ -28,7 +28,7 @@ class MainMenu:
             button_2 = pygame.Rect(360, 400, 200, 45)
             if button_1.collidepoint((mx, my)):
                 if click:
-                    gl = GameLoop(PlayerTypes.CpuL2, PlayerTypes.CpuL2)
+                    gl = GameLoop(PlayerTypes.Player, PlayerTypes.CpuL2)
                     gl.game_loop()
             if button_2.collidepoint((mx, my)):
                 if click:
