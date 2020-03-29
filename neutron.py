@@ -181,7 +181,7 @@ class Neutron:
         current_prime = 1
         for i in range(0, self.size):
             for j in range(0, self.size):
-                result += self.state[i][j] * current_prime
+                result += self.state[i][j].value * current_prime
                 current_prime = self.__find_next_prime(current_prime)
         return result
 

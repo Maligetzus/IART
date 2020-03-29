@@ -75,10 +75,6 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
     elif depth == max_depth:
         return get_score(player, node.game.state, node.game.neutron_position)
 
-    if seenStates.__contains__(node.game.hash_state(node.game.state)):
-        return
-    seenStates.add(node.game.hash_state(node.game.state))
-
     value = -1000 if maximum else 1000
 
     for direction_neutron in Direction:
@@ -113,6 +109,12 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
                                 success, newGame_pawn = newGame_neutron.hypothetical_move_piece(i, j, direction_pawn)
 
                             if(success):
+
+                                # hash_state = newGame_pawn.hash_state()
+
+                                # if not seenStates.__contains__(hash_state):
+                                #     seenStates.add(hash_state)
+                                
                                 newNode = Node(game=newGame_pawn, neutronMove=direction_neutron, pawnCoord=(i, j), pawnMove=direction_pawn)
 
                                 newValueMinimax = minimax(newNode, player, level, max_depth, depth + 1, not maximum, alpha, beta)
