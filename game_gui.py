@@ -98,6 +98,20 @@ class GameGui:
         side_panel_draw_y = self.constants.BORDER_SIZE
         self.screen.blit(side_panel, (side_panel_draw_x, side_panel_draw_y))
 
+    def display_winner(self, winner_type, winner):
+        self.screen.blit(self.background, (0, 0))
+        draw_text("Winner", self.side_panel_font, (255, 255, 255), self.screen, 0, 300, True, False)
+        if winner == Player.White:
+            player_color = (209, 27, 94)  # Pink piece color
+        else:
+            player_color = (27, 209, 142)  # Green piece color
+        draw_text(winner_type.value, self.side_panel_font, player_color,
+                  self.screen, 0, 350, True, False)
+
+        draw_text("Press ESC to return to main menu", self.side_panel_font_smaller, (255, 255, 255),
+                  self.screen, 760, 760, False, False)
+        pygame.display.flip()
+
     def get_resource(self, tile):
         if tile == Tile.White:
             return self.red_piece_image

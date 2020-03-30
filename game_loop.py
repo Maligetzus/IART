@@ -92,4 +92,20 @@ class GameLoop:
             print("Game ended, returning to main menu!")
         else:
             print("Winner: " + winner.value)  # Prints winner; Returns to main menu
-            self.restore_menu_dimensions()
+
+            esc_pressed = False
+            while not esc_pressed:
+                # Max 60 frames per second
+                clock.tick(60)
+
+                for event in pygame.event.get():
+                    if event.type == QUIT:
+                        pygame.quit()
+                        print("Game closed by User")
+
+                    elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                        self.restore_menu_dimensions()
+                        esc_pressed = True
+                        break
+
+                self.game.gui.display_winner(self.game.player_type[winner.value], winner)
