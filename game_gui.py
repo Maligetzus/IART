@@ -99,7 +99,10 @@ class GameGui:
         self.screen.blit(side_panel, (side_panel_draw_x, side_panel_draw_y))
 
     def display_winner(self, winner_type, winner):
-        self.screen.blit(self.background, (0, 0))
+        # self.screen.blit(self.background, (0, 0))
+        message_sur = Surface((1250, 800), pygame.SRCALPHA)
+        message_sur.fill((0, 0, 0, 200))
+        self.screen.blit(message_sur, (0, 0))
         draw_text("Winner", self.side_panel_font, (255, 255, 255), self.screen, 0, 300, True, False)
         if winner == Player.White:
             player_color = (209, 27, 94)  # Pink piece color

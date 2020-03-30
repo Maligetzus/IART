@@ -124,6 +124,7 @@ class GameLoop:
             print("Game ended, returning to main menu!")
         else:
             print("Winner: " + winner.value)  # Prints winner; Returns to main menu
+            self.game.gui.display_winner(self.game.player_type[winner.value], winner)
 
             esc_pressed = False
             while not esc_pressed:
@@ -139,5 +140,3 @@ class GameLoop:
                         self.restore_menu_dimensions()
                         esc_pressed = True
                         break
-
-                self.game.gui.display_winner(self.game.player_type[winner.value], winner)
