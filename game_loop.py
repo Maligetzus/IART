@@ -41,16 +41,23 @@ class GameLoop:
 
     def handle_bot_play(self):
         if self.pawn_move == None:
+            heuristic = 3
+            max_depth = 3
+
             if self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuGreedy:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 1)
+                heuristic = 1
+                max_depth = 1
             elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL0:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 2)
+                heuristic = 1
+                max_depth = 2
             elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL1:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 3)
+                heuristic = 1
+                max_depth = 3
             elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL2:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 2, 3)
-            else:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 3, 3)
+                heuristic = 2
+                max_depth = 3
+                
+            neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, heuristic, max_depth)
 
         if self.game.turn == Turn.Neutron:
             self.game.move_piece(self.game.neutron_position[0], self.game.neutron_position[1], neutron_move)
