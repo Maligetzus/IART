@@ -1,4 +1,5 @@
 from enum import Enum
+import time
 
 seenStates = set()
 
@@ -8,6 +9,12 @@ class BoardTypes(Enum):
     Board_7X7 = 2
 
 
+class PlayerTypes(Enum):
+    Player = "Player"
+    CpuL1 = "CPU (lvl 1)"
+    CpuL2 = "CPU (lvl 2)"
+
+   
 class Player(Enum):
     White = "White"
     Black = "Black"
@@ -309,3 +316,6 @@ def victory(player, state):
             if tile == Tile.Neutron:
                 return 1
     return 0
+
+def get_time_miliseconds():
+    return int(round(time.time() * 1000))

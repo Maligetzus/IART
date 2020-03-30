@@ -2,7 +2,7 @@ import neutron_util as nutils
 from neutron_util import Player, Turn, Direction, Tile, BoardTypes
 import copy
 from game_gui import GameGui
-
+from animator import Animator
 
 class Neutron:
 
@@ -14,13 +14,12 @@ class Neutron:
             self.size = 7
         self.turn = turn
         self.curr_player = curr_player
-        self.state = state #AKA Board
+        self.state = state  # AKA Board
         self.neutron_position = neutron_position
+        self.player_type = {'White': None, 'Black': None}
+        self.animator = None
 
     def start(self, starting_player=Player.White):
-        """
-        Initializes the game.
-        """
         if self.size < 3 or self.size % 2 == 0:
             return False, "Board length has to be an odd number bigger than 2"
 
@@ -43,7 +42,9 @@ class Neutron:
                     row.append(Tile.Empty)
 
             self.state.append(row)
-            self.gui = GameGui(self, self.board_type)
+
+        self.gui = GameGui(self, self.board_type)
+        self.animator = Animator(self.gui)
 
         return True, "Successfuly started the game"
 
@@ -77,11 +78,21 @@ class Neutron:
         if not valid:
             return False
 
-        if self.state[origin_x][origin_y] == Tile.Neutron:
+        origin_piece = self.state[origin_x][origin_y]
+        if origin_piece == Tile.Neutron:
             self.neutron_position = destination_x, destination_y
 
-        self.state[origin_x][origin_y], self.state[destination_x][destination_y] = \
-            self.state[destination_x][destination_y], self.state[origin_x][origin_y]
+
+        self.state[origin_x][origin_y] = Tile.Empty
+
+        #Move animation
+        if self.animator != None:
+            self.animator.animate_move(origin_piece, origin_y, origin_x, destination_y, destination_x, 0.5)
+
+        self.state[destination_x][destination_y] = origin_piece
+
+        # self.state[origin_x][origin_y], self.state[destination_x][destination_y] = \
+        #     self.state[destination_x][destination_y], self.state[origin_x][origin_y]
 
         if self.turn == Turn.Pawn:
             self.curr_player = Player.White if self.curr_player != Player.White else Player.Black
