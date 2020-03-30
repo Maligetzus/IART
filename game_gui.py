@@ -19,7 +19,7 @@ class GameGui:
 
     def init_window(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((1200, 800), HWSURFACE | DOUBLEBUF | RESIZABLE)
+        self.screen = pygame.display.set_mode((1250, 800), HWSURFACE | DOUBLEBUF)
         pygame.display.set_caption("Neutron")
         self.animation_piece = None
 
@@ -70,9 +70,7 @@ class GameGui:
         self.background.fill((0, 0, 0))
 
     def display_side_panel(self):
-        side_panel = Surface((350, 750))
-        s_height = side_panel.get_height()
-        s_width = side_panel.get_width()
+        side_panel = Surface((425, 750))
 
         # Game mode indicator section
         draw_text("Game Mode", self.side_panel_font, (255, 255, 255), side_panel, 0, 25, True, False)
@@ -96,7 +94,7 @@ class GameGui:
             move_text = "Neutron"
         draw_text(move_text, self.side_panel_font_smaller, (255, 255, 255), side_panel, 0, 375, True, False)
 
-        side_panel_draw_x = 3*self.constants.BORDER_SIZE + self.constants.BOARD_SIZE
+        side_panel_draw_x = 2*self.constants.BORDER_SIZE + self.constants.BOARD_SIZE
         side_panel_draw_y = self.constants.BORDER_SIZE
         self.screen.blit(side_panel, (side_panel_draw_x, side_panel_draw_y))
 
