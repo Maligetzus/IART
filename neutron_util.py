@@ -1,6 +1,9 @@
 from enum import Enum
 import time
 
+seenStates = set()
+
+
 class BoardTypes(Enum):
     Board_5X5 = 1
     Board_7X7 = 2
@@ -11,7 +14,7 @@ class PlayerTypes(Enum):
     CpuL1 = "CPU (lvl 1)"
     CpuL2 = "CPU (lvl 2)"
 
-
+   
 class Player(Enum):
     White = "White"
     Black = "Black"
@@ -48,7 +51,7 @@ class Node:
         self.pawnCoord = pawnCoord
         self.pawnMove = pawnMove
 
-        if children != None:
+        if children is not None:
             self.children = children
         else:
             self.children = []
@@ -65,7 +68,7 @@ def get_next_move(game, level, max_depth):
     value = minimax(head, game.curr_player, level, max_depth)
 
     for child in head.children:
-        if(child.value == value):
+        if child.value == value:
             return child.neutronMove, child.pawnCoord, child.pawnMove
 
 
@@ -73,9 +76,9 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
     player_tile = Tile.White if node.game.curr_player == Player.White else Tile.Black
     
     if victory_player(player, node.game.state):
-        return 999
+        return 999 - depth
     elif victory_opponent(player, node.game.state) or num_empty_fields_around_neutron(node.game.state, node.game.neutron_position) == 0:
-        return -999        
+        return -999 + depth        
     elif depth == max_depth:
         return get_score(player, node.game.state, node.game.neutron_position)
 
@@ -83,7 +86,7 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
 
     for direction_neutron in Direction:
 
-        if(node.game.turn != Turn.Neutron):
+        if node.game.turn != Turn.Neutron:
             direction_neutron = None
             newGame_neutron = node.game
             success = True
@@ -92,18 +95,33 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
 
         # TODO: check if neutron move causes victory
 
-        if(success):
+        if success:
+            # Check if neutron move is enough for victory
+            # If so, the pawn move will be ignored
+            finished, aux = newGame_neutron.has_finished()
+
             pawn_count = 0
 
             for i in range(newGame_neutron.size):
                 for j in range(newGame_neutron.size):
-                    if newGame_neutron.state[i][j] == player_tile:
+                    if newGame_neutron.state[i][j] == player_tile or finished:
                         pawn_count += 1
 
                         for direction_pawn in Direction:
-                            success, newGame_pawn = newGame_neutron.hypothetical_move_piece(i, j, direction_pawn)
+                            if finished:
+                                direction_pawn = None
+                                newGame_pawn = newGame_neutron
+                                success = True
+                            else:
+                                success, newGame_pawn = newGame_neutron.hypothetical_move_piece(i, j, direction_pawn)
 
                             if(success):
+
+                                # hash_state = newGame_pawn.hash_state()
+
+                                # if not seenStates.__contains__(hash_state):
+                                #     seenStates.add(hash_state)
+                                
                                 newNode = Node(game=newGame_pawn, neutronMove=direction_neutron, pawnCoord=(i, j), pawnMove=direction_pawn)
 
                                 newValueMinimax = minimax(newNode, player, level, max_depth, depth + 1, not maximum, alpha, beta)
@@ -123,10 +141,16 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
                                 if alpha >= beta:
                                     break
 
+                                if finished:
+                                    break
+
                         if alpha >= beta:
                             break
 
                         if pawn_count == node.game.size:
+                            break
+
+                        if finished:
                             break
 
                 if alpha >= beta:
@@ -135,13 +159,17 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
                 if pawn_count == node.game.size:
                     break
 
-        if(node.game.turn != Turn.Neutron):
+                if finished:
+                    break
+
+        if node.game.turn != Turn.Neutron:
             break
 
         if alpha >= beta:
             break
 
     return value
+
 
 def get_score(curr_player, state, neutron_position):
     return 10 * num_empty_tiles_player(curr_player, state) - 10 * num_empty_tiles_opponent(curr_player, state) +\
