@@ -1,5 +1,6 @@
 import pygame
 import time
+import threading
 from neutron import Neutron
 from neutron_util import BoardTypes, PlayerTypes
 from pygame.locals import *
@@ -14,14 +15,18 @@ class GameLoop:
         self.game.player_type['Black'] = player2_type
         print(self.game.player_type['White'], " // ", self.game.player_type['Black'])
 
+        self.neutron_move = None
         self.pawn_move = None
         self.pawn_coords = None
+
+        self.waiting = False
+        self.done = False
         
     def restore_menu_dimensions(self):
         self.game.gui.screen = pygame.display.set_mode((650, 575), 0, 32)
 
     # Returns finished, quit_pressed, esc_pressed
-    def handle_player_input(self):
+    def handle_player_input(self, can_move):
         # Handle Input Events
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -31,36 +36,58 @@ class GameLoop:
                 self.restore_menu_dimensions()
                 return True, False, True
 
-            elif event.type == MOUSEBUTTONDOWN:
+            elif can_move and event.type == MOUSEBUTTONDOWN:
                 self.game.gui.state.handle_mouse_down()
 
-            elif event.type == MOUSEBUTTONUP:
+            elif can_move and event.type == MOUSEBUTTONUP:
                 self.game.gui.state.handle_mouse_up()
 
         return False, False, False
 
     def handle_bot_play(self):
-        if self.pawn_move == None:
+        if not self.done and self.pawn_move == None:
+            heuristic = 3
+            max_depth = 3
+
             if self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuGreedy:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 1)
+                heuristic = 1
+                max_depth = 1
             elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL0:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 2)
+                heuristic = 1
+                max_depth = 2
             elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL1:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 3)
+                heuristic = 1
+                max_depth = 3
             elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL2:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 2, 3)
-            else:
-                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 3, 3)
+                heuristic = 2
+                max_depth = 3
 
-        if self.game.turn == Turn.Neutron:
-            self.game.move_piece(self.game.neutron_position[0], self.game.neutron_position[1], neutron_move)
-        elif self.game.turn == Turn.Pawn:
-            self.game.move_piece(self.pawn_coords[0], self.pawn_coords[1], self.pawn_move)
-            self.pawn_coords = None
-            self.pawn_move = None
+            def get_result(instance, heuristic, max_depth):
+                instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move(instance.game, heuristic, max_depth)
+                instance.done = True
+                instance.waiting = False
 
-        finished, winner = self.game.has_finished()
-        return finished, winner
+            self.waiting = True
+            self.done = False
+            thread = threading.Thread(target=get_result, args=(self, heuristic, max_depth))
+            thread.setDaemon(True)
+            thread.start()
+
+        if self.done:
+            if self.game.turn == Turn.Neutron:
+                self.game.move_piece(self.game.neutron_position[0], self.game.neutron_position[1], self.neutron_move)
+                self.neutron_move = None
+            elif self.game.turn == Turn.Pawn:
+                self.game.move_piece(self.pawn_coords[0], self.pawn_coords[1], self.pawn_move)
+                self.pawn_coords = None
+                self.pawn_move = None
+
+                self.done = False
+
+            finished, winner = self.game.has_finished()
+            return finished, winner
+        else:
+            return False, None
 
 
     def game_loop(self):
@@ -75,12 +102,17 @@ class GameLoop:
             clock.tick(60)
 
             current_turn = self.game.turn
-            if self.game.player_type[self.game.curr_player.value] == PlayerTypes.Player:
-                finished, quit_pressed, esc_pressed = self.handle_player_input()
-            else:
-                finished, winner = self.handle_bot_play()
+            can_move = False
 
-            if not finished and self.game.turn != current_turn:
+            if self.game.player_type[self.game.curr_player.value] == PlayerTypes.Player:
+                can_move = True
+            else:
+                if not self.waiting:
+                    finished, winner = self.handle_bot_play()
+
+            finished, quit_pressed, esc_pressed = self.handle_player_input(can_move)
+
+            if not self.waiting and not finished and self.game.turn != current_turn:
                 finished, winner = self.game.has_finished()
 
             self.game.gui.display()
