@@ -127,17 +127,15 @@ def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-10
 
                                 newValueMinimax = minimax(newNode, player, heuristic, max_depth, depth + 1, not maximum, alpha, beta)
 
-                                if maximum:
-                                    newValue = max(value, newValueMinimax)
-                                    alpha = max(alpha, newValue)
-                                else:
-                                    newValue = min(value, newValueMinimax)
-                                    beta = min(beta, newValue)
-
-                                newNode.value = newValue
+                                newNode.value = newValueMinimax
                                 node.add_child(newNode)
 
-                                value = newValue
+                                if maximum:
+                                    value = max(value, newValueMinimax)
+                                    alpha = max(alpha, value)
+                                else:
+                                    value = min(value, newValueMinimax)
+                                    beta = min(beta, value)
 
                                 if alpha >= beta:
                                     break
