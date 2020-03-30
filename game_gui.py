@@ -26,6 +26,7 @@ class GameGui:
     def load_resources(self):
         # Side Panel font
         self.side_panel_font = pygame.font.SysFont(None, 50, False)
+        self.side_panel_font_smaller = pygame.font.SysFont(None, 40, False)
 
         # Load Pieces and Board
         self.red_piece_image = pygame.image.load('resources/piece_red.png')
@@ -77,7 +78,7 @@ class GameGui:
         draw_text("Game Mode", self.side_panel_font, (255, 255, 255), side_panel, 0, 25, True, False)
 
         game_mode_text = self.game.player_type['White'].value + " vs " + self.game.player_type['Black'].value
-        draw_text(game_mode_text, self.side_panel_font, (255, 255, 255), side_panel, 0, 75, True, False)
+        draw_text(game_mode_text, self.side_panel_font_smaller, (255, 255, 255), side_panel, 0, 75, True, False)
 
         # Turn indicator section
         draw_text("Turn", self.side_panel_font, (255, 255, 255), side_panel, 0, 175, True, False)
@@ -85,7 +86,7 @@ class GameGui:
             player_color = (209, 27, 94)  # Pink piece color
         else:
             player_color = (27, 209, 142)  # Green piece color
-        draw_text(self.game.player_type[self.game.curr_player.value].value, self.side_panel_font, player_color, side_panel, 0, 225, True, False)
+        draw_text(self.game.player_type[self.game.curr_player.value].value, self.side_panel_font_smaller, player_color, side_panel, 0, 225, True, False)
 
         # To move section
         draw_text("To move", self.side_panel_font, (255, 255, 255), side_panel, 0, 325, True, False)
@@ -93,7 +94,7 @@ class GameGui:
             move_text = "Pawn"
         else:
             move_text = "Neutron"
-        draw_text(move_text, self.side_panel_font, (255, 255, 255), side_panel, 0, 375, True, False)
+        draw_text(move_text, self.side_panel_font_smaller, (255, 255, 255), side_panel, 0, 375, True, False)
 
         side_panel_draw_x = 3*self.constants.BORDER_SIZE + self.constants.BOARD_SIZE
         side_panel_draw_y = self.constants.BORDER_SIZE
