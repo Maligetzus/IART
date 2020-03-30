@@ -7,8 +7,8 @@ from neutron_util import get_next_move, Turn
 
 
 class GameLoop:
-    def __init__(self, player1_type, player2_type):
-        self.game = Neutron(BoardTypes.Board_5X5)
+    def __init__(self, board_type, player1_type, player2_type):
+        self.game = Neutron(board_type)
 
         self.game.player_type['White'] = player1_type
         self.game.player_type['Black'] = player2_type

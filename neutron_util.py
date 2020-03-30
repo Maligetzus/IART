@@ -5,8 +5,8 @@ seenStates = set()
 
 
 class BoardTypes(Enum):
-    Board_5X5 = 1
-    Board_7X7 = 2
+    Board_5X5 = "5x5 Board"
+    Board_7X7 = "7x7 Board"
 
 
 class PlayerTypes(Enum):
