@@ -15,7 +15,7 @@ class MainMenu:
         self.font = pygame.font.SysFont(None, 42, False)
         self.current_player1_index = 0
         self.current_player2_index = 0
-        self.player_types_arr = [PlayerTypes.Player, PlayerTypes.CpuL1, PlayerTypes.CpuL2]
+        self.player_types_arr = [PlayerTypes.Player, PlayerTypes.CpuGreedy, PlayerTypes.CpuL0, PlayerTypes.CpuL1, PlayerTypes.CpuL2, PlayerTypes.CpuL3]
 
         # Resources
         self.game_image = pygame.image.load('resources/main_menu.jpg')

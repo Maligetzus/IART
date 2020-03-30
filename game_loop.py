@@ -14,11 +14,9 @@ class GameLoop:
         self.game.player_type['Black'] = player2_type
         print(self.game.player_type['White'], " // ", self.game.player_type['Black'])
 
-        self.pawn_lvl1_move = None
-        self.pawn_lvl1_coords = None
-        self.pawn_lvl2_move = None
-        self.pawn_lvl2_coords = None
-
+        self.pawn_move = None
+        self.pawn_coords = None
+        
     def restore_menu_dimensions(self):
         self.game.gui.screen = pygame.display.set_mode((650, 575), 0, 32)
 
@@ -42,26 +40,24 @@ class GameLoop:
         return False, False, False
 
     def handle_bot_play(self):
-        if self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL1:
-            return self.handle_bot_l1_play()
-        else:
-            return self.handle_bot_l2_play()
-
-    def handle_bot_l1_play(self):
-        print("Bot LVL1 turn TODO")
-        finished, winner = self.game.has_finished()
-        return finished, winner
-
-    def handle_bot_l2_play(self):
-        if self.pawn_lvl2_move == None:
-            neutron_move, self.pawn_lvl2_coords, self.pawn_lvl2_move = get_next_move(self.game, 1, 3)
+        if self.pawn_move == None:
+            if self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuGreedy:
+                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 1)
+            elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL0:
+                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 2)
+            elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL1:
+                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 1, 3)
+            elif self.game.player_type[self.game.curr_player.value] == PlayerTypes.CpuL2:
+                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 2, 3)
+            else:
+                neutron_move, self.pawn_coords, self.pawn_move = get_next_move(self.game, 3, 3)
 
         if self.game.turn == Turn.Neutron:
             self.game.move_piece(self.game.neutron_position[0], self.game.neutron_position[1], neutron_move)
         elif self.game.turn == Turn.Pawn:
-            self.game.move_piece(self.pawn_lvl2_coords[0], self.pawn_lvl2_coords[1], self.pawn_lvl2_move)
-            self.pawn_lvl2_coords = None
-            self.pawn_lvl2_move = None
+            self.game.move_piece(self.pawn_coords[0], self.pawn_coords[1], self.pawn_move)
+            self.pawn_coords = None
+            self.pawn_move = None
 
         finished, winner = self.game.has_finished()
         return finished, winner

@@ -11,8 +11,11 @@ class BoardTypes(Enum):
 
 class PlayerTypes(Enum):
     Player = "Player"
+    CpuGreedy = "CPU (Greedy)"
+    CpuL0 = "CPU (lvl 0)"
     CpuL1 = "CPU (lvl 1)"
     CpuL2 = "CPU (lvl 2)"
+    CpuL3 = "CPU (lvl 3)"
 
    
 class Player(Enum):
@@ -62,17 +65,17 @@ class Node:
         self.children.append(newNode)
 
 
-def get_next_move(game, level, max_depth):
+def get_next_move(game, heuristic, max_depth):
     head = Node(game=game)
 
-    value = minimax(head, game.curr_player, level, max_depth)
+    value = minimax(head, game.curr_player, heuristic, max_depth)
 
     for child in head.children:
         if child.value == value:
             return child.neutronMove, child.pawnCoord, child.pawnMove
 
 
-def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, beta=1000):
+def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-1000, beta=1000):
     player_tile = Tile.White if node.game.curr_player == Player.White else Tile.Black
     
     if victory_player(player, node.game.state):
@@ -80,7 +83,7 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
     elif victory_opponent(player, node.game.state) or num_empty_fields_around_neutron(node.game.state, node.game.neutron_position) == 0:
         return -999 + depth        
     elif depth == max_depth:
-        return get_score(player, node.game.state, node.game.neutron_position)
+        return get_score(heuristic, player, node.game.state, node.game.neutron_position)
 
     value = -1000 if maximum else 1000
 
@@ -92,8 +95,6 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
             success = True
         else:
             success, newGame_neutron = node.game.hypothetical_move_piece(node.game.neutron_position[0], node.game.neutron_position[1], direction_neutron)
-
-        # TODO: check if neutron move causes victory
 
         if success:
             # Check if neutron move is enough for victory
@@ -124,7 +125,7 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
                                 
                                 newNode = Node(game=newGame_pawn, neutronMove=direction_neutron, pawnCoord=(i, j), pawnMove=direction_pawn)
 
-                                newValueMinimax = minimax(newNode, player, level, max_depth, depth + 1, not maximum, alpha, beta)
+                                newValueMinimax = minimax(newNode, player, heuristic, max_depth, depth + 1, not maximum, alpha, beta)
 
                                 if maximum:
                                     newValue = max(value, newValueMinimax)
@@ -171,10 +172,18 @@ def minimax(node, player, level, max_depth, depth=0, maximum=True, alpha=-1000, 
     return value
 
 
-def get_score(curr_player, state, neutron_position):
-    return 10 * num_empty_tiles_player(curr_player, state) - 10 * num_empty_tiles_opponent(curr_player, state) +\
+def get_score(heuristic, curr_player, state, neutron_position):
+    if heuristic == 3:
+        return 10 * num_empty_tiles_player(curr_player, state) - 10 * num_empty_tiles_opponent(curr_player, state) +\
            200 * neutron_to_player(curr_player, state, neutron_position) - 200 * neutron_to_opponent(curr_player, state, neutron_position) +\
            10 * odd(state, neutron_position) * (8 - num_empty_fields_around_neutron(state, neutron_position))
+    elif heuristic == 2:
+        return 10 * num_empty_tiles_player(curr_player, state) - 10 * num_empty_tiles_opponent(curr_player, state) +\
+           10 * odd(state, neutron_position) * (8 - num_empty_fields_around_neutron(state, neutron_position))
+    elif heuristic == 1:
+        return neutron_to_player(curr_player, state, neutron_position) - neutron_to_opponent(curr_player, state, neutron_position)
+    else:
+        return 0
 
 
 def num_empty_tiles_player(curr_player, state):
