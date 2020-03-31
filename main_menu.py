@@ -25,7 +25,8 @@ class MainMenu:
         self.current_player1_index = 0
         self.current_player2_index = 0
         # Stores the possible types of players
-        self.player_types_arr = [PlayerTypes.Player, PlayerTypes.CpuGreedy, PlayerTypes.CpuL0, PlayerTypes.CpuL1, PlayerTypes.CpuL2, PlayerTypes.CpuL3]
+        self.player_types_arr = [PlayerTypes.Player, PlayerTypes.CpuGreedy, PlayerTypes.CpuL0, PlayerTypes.CpuL1,
+                                PlayerTypes.CpuL2, PlayerTypes.CpuL3, PlayerTypes.CpuRandom, PlayerTypes.CpuOrdered]
         # Stores the selected board_size index
         self.board_size_index = 0
         # Stores the possible board sizes

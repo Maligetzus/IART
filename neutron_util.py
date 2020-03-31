@@ -1,5 +1,6 @@
 from enum import Enum
 import time
+import random
 
 seenStates = set()
 
@@ -18,6 +19,8 @@ class PlayerTypes(Enum):
     CpuL1 = "CPU (lvl 1)"
     CpuL2 = "CPU (lvl 2)"
     CpuL3 = "CPU (lvl 3)"
+    CpuRandom = "CPU (RandM)"
+    CpuOrdered = "CPU (OrdM)"
 
 
 # Enum the player colour.
@@ -77,19 +80,47 @@ class Node:
 def get_next_move(game, heuristic, max_depth):
     head = Node(game=game)
 
-    value = minimax(head, game.curr_player, heuristic, max_depth)
+    value = minimax_alpha_beta_pruning(head, game.curr_player, heuristic, max_depth)
 
     for child in head.children:
         if child.value == value:
             return child.neutronMove, child.pawnCoord, child.pawnMove
 
+# Function that returns the next move to be executed, with the most likely to be best directions checked first
+def get_next_move_ordered(game, heuristic, max_depth):
+    head = Node(game=game)
 
-# TODO: minimax variations:
-#   - first directions
-#   - random best moves
+    value = minimax_alpha_beta_pruning(head, game.curr_player, heuristic, max_depth, first_directions=True)
+
+    for child in head.children:
+        if child.value == value:
+            return child.neutronMove, child.pawnCoord, child.pawnMove
+
+# Function that returns the next move to be executed (picks a random one from all the best)
+def get_next_move_random(game, heuristic, max_depth):
+    head = Node(game=game)
+
+    value = minimax_alpha_beta_pruning(head, game.curr_player, heuristic, max_depth, multiple_moves=True)
+
+    possibleChildren = []
+
+    for i in range(len(head.children)):
+        if head.children[i].value == value:
+            possibleChildren.append(i)
+            print(head.children[i].neutronMove)
+
+    chosenChildIndex = possibleChildren[random.randint(0, len(possibleChildren) - 1)]
+    chosenChild = head.children[chosenChildIndex]
+
+    print(chosenChild.neutronMove)
+    print(chosenChild.pawnCoord)
+    print(chosenChild.pawnMove)
+
+    return chosenChild.neutronMove, chosenChild.pawnCoord, chosenChild.pawnMove
+
 
 # Function that contains the minimax algorithm with alpha beta pruning.
-def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-1000, beta=1000):
+def minimax_alpha_beta_pruning(node, player, heuristic, max_depth, multiple_moves=False, first_directions=False, depth=0, maximum=True, alpha=-1000, beta=1000):
     player_tile = Tile.White if node.game.curr_player == Player.White else Tile.Black
     
     if victory_player(player, node.game.state):
@@ -101,7 +132,18 @@ def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-10
 
     value = -1000 if maximum else 1000
 
-    for direction_neutron in Direction:
+    directions = []
+
+    for direction in Direction:
+
+        if first_directions and\
+            (node.game.curr_player == Player.White and (direction == Direction.LeftUp or direction == Direction.RightUp or direction == Direction.Up)) or\
+            (node.game.curr_player == Player.Black and (direction == Direction.LeftDown or direction == Direction.RightDown or direction == Direction.Down)):
+            directions.insert(0, direction)
+        else:
+            directions.append(direction)
+
+    for direction_neutron in directions:
 
         if node.game.turn != Turn.Neutron:
             direction_neutron = None
@@ -139,7 +181,7 @@ def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-10
                                 
                                 newNode = Node(game=newGame_pawn, neutronMove=direction_neutron, pawnCoord=(i, j), pawnMove=direction_pawn)
 
-                                newValueMinimax = minimax(newNode, player, heuristic, max_depth, depth + 1, not maximum, alpha, beta)
+                                newValueMinimax = minimax_alpha_beta_pruning(newNode, player, heuristic, max_depth, multiple_moves, first_directions, depth + 1, not maximum, alpha, beta)
 
                                 newNode.value = newValueMinimax
                                 node.add_child(newNode)
@@ -151,13 +193,13 @@ def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-10
                                     value = min(value, newValueMinimax)
                                     beta = min(beta, value)
 
-                                if alpha >= beta:
+                                if alpha == beta and not multiple_moves or alpha > beta:
                                     break
 
                                 if finished:
                                     break
 
-                        if alpha >= beta:
+                        if alpha == beta and not multiple_moves or alpha > beta:
                             break
 
                         if pawn_count == node.game.size:
@@ -166,7 +208,7 @@ def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-10
                         if finished:
                             break
 
-                if alpha >= beta:
+                if alpha == beta and not multiple_moves or alpha > beta:
                     break
 
                 if pawn_count == node.game.size:
@@ -178,7 +220,7 @@ def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-10
         if node.game.turn != Turn.Neutron:
             break
 
-        if alpha >= beta:
+        if alpha == beta and not multiple_moves or alpha > beta:
             break
 
     return value

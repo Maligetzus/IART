@@ -2,9 +2,8 @@ import pygame
 import time
 import threading
 from neutron import Neutron
-from neutron_util import BoardTypes, PlayerTypes
+from neutron_util import get_next_move, get_next_move_random, get_next_move_ordered, BoardTypes, PlayerTypes, Turn
 from pygame.locals import *
-from neutron_util import get_next_move, Turn
 
 class GameLoop:
     def __init__(self, board_type, player1_type, player2_type):
@@ -77,7 +76,12 @@ class GameLoop:
             def get_result(instance, heuristic, max_depth):
                 start_time = time.time()
                 
-                instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move(instance.game, heuristic, max_depth)
+                if instance.game.player_type[instance.game.curr_player.value] == PlayerTypes.CpuRandom:
+                    instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move_random(instance.game, heuristic, max_depth)
+                elif instance.game.player_type[instance.game.curr_player.value] == PlayerTypes.CpuOrdered:
+                    instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move_ordered(instance.game, heuristic, max_depth)
+                else:
+                    instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move(instance.game, heuristic, max_depth)
                 
                 if instance.analyse_cpu:
                     instance.cpu_times.append(time.time() - start_time)
@@ -151,7 +155,8 @@ class GameLoop:
             for i in range(len(self.cpu_times)):
                 average_time += self.cpu_times[i]
 
-            average_time /= len(self.cpu_times)
+            if len(self.cpu_times) != 0:
+                average_time /= len(self.cpu_times)
 
             print("Average time per move: ", end="")
             print(average_time, end="")

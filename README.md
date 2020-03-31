@@ -29,22 +29,37 @@ The bot moves are calculated using minimax with alpha-beta pruning, with differi
 * Greedy:
     * Heuristic #1
     * Depth: 1
+    * Minimax with α–β pruning
 
 * Level 0:
     * Heuristic #1
     * Depth: 2
+    * Minimax with α–β pruning
 
 * Level 1:
     * Heuristic #1
     * Depth: 3
+    * Minimax with α–β pruning
 
 * Level 2:
     * Heuristic #2
     * Depth: 3
+    * Minimax with α–β pruning
 
 * Level 3:
     * Heuristic #3
     * Depth: 3
+    * Minimax with α–β pruning
+
+* Random Minimax:
+    * Heuristic #3
+    * Depth: 3
+    * Minimax with α–β pruning that chooses one of best moves randomly
+
+* Ordered Minimax:
+    * Heuristic #3
+    * Depth: 3
+    * Minimax with α–β pruning that checks the most likely to be better Neutron directions first
 
 **Note**: the levels indicate different search parameters, they do not imply better skill or efficiency.
 
@@ -52,19 +67,19 @@ The bot moves are calculated using minimax with alpha-beta pruning, with differi
 
 #### Heuristic #1
 
-NeutronNumPathsToPlayer - NeutronNumPathsToOpponent
+*NeutronNumPathsToPlayer* - *NeutronNumPathsToOpponent*
 
 #### Heuristic #2
 
-10 * NumEmptyTilesPlayer - 10 * NumEmptyTilesOpponent + 10 * Odd * (8 - NumEmptyTilesAroundNeutron)
+10 * *NumEmptyTilesPlayer* - 10 * *NumEmptyTilesOpponent* + 10 * *Odd* * (8 - *NumEmptyTilesAroundNeutron*)
 
 #### Heuristic #3
 
-10 * NumEmptyTilesPlayer - 10 * NumEmptyTilesOpponent + 200 * NeutronNumPathsToPlayer - 200 * NeutronNumPathsToOpponent + 10 * Odd * (8 - NumEmptyTilesAroundNeutron)
+10 * *NumEmptyTilesPlayer* - 10 * *NumEmptyTilesOpponent* + 200 * *NeutronNumPathsToPlayer* - 200 * *NeutronNumPathsToOpponent* + 10 * *Odd* * (8 - *NumEmptyTilesAroundNeutron*)
 
 #### In all heuristics
-VictoryPlayer -> 999 - depth
-VictoryOpponent -> -999 + depth
+*VictoryPlayer* -> 999 - *depth*
+*VictoryOpponent* -> -999 + *depth*
 
 * *NumEmptyTilesPlayer* - Number of empty tiles in the current player's base
 * *NumEmptyTilesOpponent* - Number of empty tiles in the opponent's base
