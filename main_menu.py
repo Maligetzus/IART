@@ -12,6 +12,9 @@ class MainMenu:
         pygame.init()
         # Sets window title
         pygame.display.set_caption('Neutron')
+        # Sets window icon
+        icon = pygame.image.load('resources/logo.png')
+        pygame.display.set_icon(icon)
         # Creates a 650x575 window
         self.screen = pygame.display.set_mode((650, 575), 0, 32)
         # Used to limit number of executions per second
