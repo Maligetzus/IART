@@ -2,7 +2,7 @@ import pygame
 import time
 import threading
 from neutron import Neutron
-from neutron_util import get_next_move, get_next_move_random, BoardTypes, PlayerTypes, Turn
+from neutron_util import get_next_move, get_next_move_random, get_next_move_ordered, BoardTypes, PlayerTypes, Turn
 from pygame.locals import *
 
 class GameLoop:
@@ -78,6 +78,8 @@ class GameLoop:
                 
                 if instance.game.player_type[instance.game.curr_player.value] == PlayerTypes.CpuRandom:
                     instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move_random(instance.game, heuristic, max_depth)
+                elif instance.game.player_type[instance.game.curr_player.value] == PlayerTypes.CpuOrdered:
+                    instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move_ordered(instance.game, heuristic, max_depth)
                 else:
                     instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move(instance.game, heuristic, max_depth)
                 
