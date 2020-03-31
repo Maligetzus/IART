@@ -18,6 +18,15 @@ class GameLoop:
         self.pawn_move = None
         self.pawn_coords = None
 
+        if player1_type == PlayerTypes.Player and player2_type != PlayerTypes.Player or\
+            player1_type != PlayerTypes.Player and player2_type == PlayerTypes.Player:
+            self.analyse_cpu = True
+        else:
+            self.analyse_cpu = False
+
+        self.cpu_times = []
+        self.cpu_plays = 0
+
         # For threading
         self.waiting = False    # indicates if a background thread is running
         self.done = False       # indicates if the background task is done
@@ -66,7 +75,13 @@ class GameLoop:
                 max_depth = 3
 
             def get_result(instance, heuristic, max_depth):
+                start_time = time.time()
+                
                 instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move(instance.game, heuristic, max_depth)
+                
+                if instance.analyse_cpu:
+                    instance.cpu_times.append(time.time() - start_time)
+                    instance.cpu_plays += 1
 
                 # task is done
                 instance.done = True
@@ -126,6 +141,21 @@ class GameLoop:
                 finished, winner = self.game.has_finished()
 
             self.game.gui.display()
+
+        if self.analyse_cpu:
+            print("Number of CPU plays: ", end="")
+            print(self.cpu_plays)
+
+            average_time = 0
+
+            for i in range(len(self.cpu_times)):
+                average_time += self.cpu_times[i]
+
+            average_time /= len(self.cpu_times)
+
+            print("Average time per move: ", end="")
+            print(average_time, end="")
+            print(" seconds")
 
         if quit_pressed:  # Closes window
             pygame.quit()

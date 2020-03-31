@@ -84,6 +84,10 @@ def get_next_move(game, heuristic, max_depth):
             return child.neutronMove, child.pawnCoord, child.pawnMove
 
 
+# TODO: minimax variations:
+#   - first directions
+#   - random best moves
+
 # Function that contains the minimax algorithm with alpha beta pruning.
 def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-1000, beta=1000):
     player_tile = Tile.White if node.game.curr_player == Player.White else Tile.Black
