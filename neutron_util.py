@@ -4,11 +4,13 @@ import time
 seenStates = set()
 
 
+# Enum that denotes the size of the board.
 class BoardTypes(Enum):
     Board_5X5 = "5x5 Board"
     Board_7X7 = "7x7 Board"
 
 
+# Enum that denotes types of players in the game.
 class PlayerTypes(Enum):
     Player = "Player"
     CpuGreedy = "CPU (Greedy)"
@@ -17,17 +19,20 @@ class PlayerTypes(Enum):
     CpuL2 = "CPU (lvl 2)"
     CpuL3 = "CPU (lvl 3)"
 
-   
+
+# Enum the player colour.
 class Player(Enum):
     White = "White"
     Black = "Black"
 
 
+# Enum that denotes the turn kind.
 class Turn(Enum):
     Neutron = "Neutron"
     Pawn = "Pawn"
 
 
+# Enum that denotes the turn directions.
 class Direction(Enum):
     Up = 0  #MovYPos
     Down = 1  #MovYNeg
@@ -39,6 +44,7 @@ class Direction(Enum):
     RightDown = 7  #MovXPosYNeg
 
 
+# Enum that denotes the tile kind.
 class Tile(Enum):
     Empty = 0
     Black = 1
@@ -46,8 +52,10 @@ class Tile(Enum):
     Neutron = 3
 
 
+# Class that represents the minimax tree node.
 class Node:
 
+    # Method
     def __init__(self, game=None, neutronMove=None, pawnCoord=None, pawnMove=None, children=None, value=None):
         self.game = game
         self.neutronMove = neutronMove
@@ -65,6 +73,7 @@ class Node:
         self.children.append(newNode)
 
 
+# Function that returns the next move to be executed.
 def get_next_move(game, heuristic, max_depth):
     head = Node(game=game)
 
@@ -75,6 +84,7 @@ def get_next_move(game, heuristic, max_depth):
             return child.neutronMove, child.pawnCoord, child.pawnMove
 
 
+# Function that contains the minimax algorithm with alpha beta pruning.
 def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-1000, beta=1000):
     player_tile = Tile.White if node.game.curr_player == Player.White else Tile.Black
     
@@ -170,6 +180,7 @@ def minimax(node, player, heuristic, max_depth, depth=0, maximum=True, alpha=-10
     return value
 
 
+# Function that returns the values of a give heuistic.
 def get_score(heuristic, curr_player, state, neutron_position):
     if heuristic == 3:
         return 10 * num_empty_tiles_player(curr_player, state) - 10 * num_empty_tiles_opponent(curr_player, state) +\
@@ -184,22 +195,27 @@ def get_score(heuristic, curr_player, state, neutron_position):
         return 0
 
 
+# Function returns the number of empty tiles in the current player's back row.
 def num_empty_tiles_player(curr_player, state):
     return __num_empty_tiles(curr_player, state)
 
 
+# Function returns the number of empty tiles in the opposing player's back row.
 def num_empty_tiles_opponent(curr_player, state):
     return __num_empty_tiles(Player.White if curr_player == Player.Black else Player.Black, state)
 
 
+# Function returns if the neutron has a path to the current player's victory in the next turn.
 def neutron_to_player(curr_player, state, neutron_position):
     return __neutron_to(curr_player, state, neutron_position)
 
 
+# Function returns if the neutron has a path to an opposing player's victory in the next turn.
 def neutron_to_opponent(curr_player, state, neutron_position):
     return __neutron_to(Player.White if curr_player == Player.Black else Player.Black, state, neutron_position)
 
 
+# Function returns the number of empty field around neutron.
 def num_empty_fields_around_neutron(state, neutron_position):
     counter = 0
 
@@ -239,6 +255,7 @@ def num_empty_fields_around_neutron(state, neutron_position):
     return counter
 
 
+# Function returns if the method num_empty_fields_around_neutron returns an odd number.
 def odd(state, neutron_position):
     if num_empty_fields_around_neutron(state, neutron_position) % 2 == 0:
         return -1
@@ -246,14 +263,17 @@ def odd(state, neutron_position):
         return 1
 
 
+# Function returns if the victory condition was met by the current player.
 def victory_player(curr_player, state):
     return victory(curr_player, state)
 
 
+# Function returns if the victory condition was met by the opposing player.
 def victory_opponent(curr_player, state):
     return victory(Player.White if curr_player == Player.Black else Player.Black, state)
 
 
+# Function returns the number of empty tiles in a player's back row.
 def __num_empty_tiles(player, state):
     counter = 0
     if player == Player.Black:
@@ -268,6 +288,7 @@ def __num_empty_tiles(player, state):
     return counter
 
 
+# Function returns if the neutron has a path to a player's victory in the next turn.
 def __neutron_to(player, state, neutron_position):
     counter = 0
 
@@ -313,6 +334,7 @@ def __neutron_to(player, state, neutron_position):
     return counter
 
 
+# Function returns if the victory condition was met by a given player.
 def victory(player, state):
     if player == Player.Black:
         for tile in state[0]:
@@ -324,5 +346,7 @@ def victory(player, state):
                 return 1
     return 0
 
+
+# Function that returns current time in miliseconds.
 def get_time_miliseconds():
     return int(round(time.time() * 1000))
