@@ -29,37 +29,37 @@ The bot moves are calculated using minimax with alpha-beta pruning, with differi
 * Greedy:
     * Heuristic #1
     * Depth: 1
-    * Minimax Variation with α–β pruning
+    * Minimax with α–β pruning
 
 * Level 0:
     * Heuristic #1
     * Depth: 2
-    * Minimax Variation with α–β pruning
+    * Minimax with α–β pruning
 
 * Level 1:
     * Heuristic #1
     * Depth: 3
-    * Minimax Variation with α–β pruning
+    * Minimax with α–β pruning
 
 * Level 2:
     * Heuristic #2
     * Depth: 3
-    * Minimax Variation with α–β pruning
+    * Minimax with α–β pruning
 
 * Level 3:
     * Heuristic #3
     * Depth: 3
-    * Minimax Variation with α–β pruning
+    * Minimax with α–β pruning
 
 * Random Minimax:
     * Heuristic #3
     * Depth: 3
-    * Minimax Variation with α–β pruning that chooses one of best moves randomly
+    * Minimax with α–β pruning that chooses one of best moves randomly
 
 * Ordered Minimax:
     * Heuristic #3
     * Depth: 3
-    * Minimax Variation with α–β pruning that checks the most likely to be better Neutron directions first
+    * Minimax with α–β pruning that checks the most likely to be better Neutron directions first
 
 **Note**: the levels indicate different search parameters, they do not imply better skill or efficiency.
 
