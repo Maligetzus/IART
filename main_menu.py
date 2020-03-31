@@ -5,6 +5,7 @@ from game_loop import GameLoop
 from gui_utils import draw_text
 from neutron_util import PlayerTypes, BoardTypes
 
+# TODO: comment
 
 class MainMenu:
     def __init__(self):

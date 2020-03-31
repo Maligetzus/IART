@@ -1,6 +1,8 @@
 from gui_utils import *
 import pygame.mouse
 
+# TODO: comment
+
 class GuiState:
     def __init__(self, board_gui):
         self.board_gui = board_gui

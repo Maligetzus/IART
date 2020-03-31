@@ -6,7 +6,6 @@ from neutron_util import BoardTypes, PlayerTypes
 from pygame.locals import *
 from neutron_util import get_next_move, Turn
 
-
 class GameLoop:
     def __init__(self, board_type, player1_type, player2_type):
         self.game = Neutron(board_type)
@@ -19,14 +18,17 @@ class GameLoop:
         self.pawn_move = None
         self.pawn_coords = None
 
-        self.waiting = False
-        self.done = False
+        # For threading
+        self.waiting = False    # indicates if a background thread is running
+        self.done = False       # indicates if the background task is done
         
     def restore_menu_dimensions(self):
         self.game.gui.screen = pygame.display.set_mode((650, 575), 0, 32)
 
     # Returns finished, quit_pressed, esc_pressed
     def handle_player_input(self, can_move):
+        # can_move indicates if the player can do a move input
+
         # Handle Input Events
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -45,6 +47,7 @@ class GameLoop:
         return False, False, False
 
     def handle_bot_play(self):
+        # if the background task is done, it won't trigger it again (yet)
         if not self.done and self.pawn_move == None:
             heuristic = 3
             max_depth = 3
@@ -64,15 +67,19 @@ class GameLoop:
 
             def get_result(instance, heuristic, max_depth):
                 instance.neutron_move, instance.pawn_coords, instance.pawn_move = get_next_move(instance.game, heuristic, max_depth)
+
+                # task is done
                 instance.done = True
                 instance.waiting = False
 
+            # triggers background task
             self.waiting = True
             self.done = False
             thread = threading.Thread(target=get_result, args=(self, heuristic, max_depth))
             thread.setDaemon(True)
             thread.start()
 
+        # Only enters if background task is done
         if self.done:
             if self.game.turn == Turn.Neutron:
                 self.game.move_piece(self.game.neutron_position[0], self.game.neutron_position[1], self.neutron_move)
@@ -82,6 +89,7 @@ class GameLoop:
                 self.pawn_coords = None
                 self.pawn_move = None
 
+                # Reset threading done variable
                 self.done = False
 
             finished, winner = self.game.has_finished()
@@ -105,13 +113,15 @@ class GameLoop:
             can_move = False
 
             if self.game.player_type[self.game.curr_player.value] == PlayerTypes.Player:
-                can_move = True
+                can_move = True # if it's the player's turn, he can move
             else:
+                # if it's not waiting for the background task, it can handle bot play
                 if not self.waiting:
                     finished, winner = self.handle_bot_play()
 
             finished, quit_pressed, esc_pressed = self.handle_player_input(can_move)
 
+            # only checks if game has finished if it's not waiting for background task
             if not self.waiting and not finished and self.game.turn != current_turn:
                 finished, winner = self.game.has_finished()
 

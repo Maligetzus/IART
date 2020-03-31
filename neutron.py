@@ -12,13 +12,15 @@ class Neutron:
             self.size = 5
         else:
             self.size = 7
-        self.turn = turn
+
+        self.turn = turn    # Indicates which piece should be moved: neutron or pawn
         self.curr_player = curr_player
         self.state = state  # AKA Board
-        self.neutron_position = neutron_position
-        self.player_type = {'White': None, 'Black': None}
+        self.neutron_position = neutron_position    # for easier access
+        self.player_type = {'White': None, 'Black': None}   # indicates each player type (human, cpu, etc)
         self.animator = None
 
+    # Initializes the game
     def start(self, starting_player=Player.White):
         if self.size < 3 or self.size % 2 == 0:
             return False, "Board length has to be an odd number bigger than 2"
@@ -48,23 +50,30 @@ class Neutron:
 
         return True, "Successfuly started the game"
 
+    # Checks if game as finished
     def has_finished(self):
 
+        # Has Black won?
         if nutils.victory(Player.Black, self.state):
             return True, Player.Black
 
+        # Has White won?
         if nutils.victory(Player.White, self.state):
             return True, Player.White
 
+        # Is the neutron stuck?
         if nutils.num_empty_fields_around_neutron(self.state, self.neutron_position) == 0:
             return True, Player.White if self.curr_player != Player.White else Player.Black
         else:
             return False, None
 
+    # Moves a piece
     def move_piece(self, origin_x, origin_y, direction):
         return self.__move_piece(self, origin_x, origin_y, direction)
 
+    # Returns the new game state after moving a piece (doesn't change actual game state)
     def hypothetical_move_piece(self, origin_x, origin_y, direction):
+        # Makes copy of the game and applies move
         game = Neutron(self.board_type, self.curr_player, self.turn, copy.deepcopy(self.state), self.neutron_position)
 
         success = self.__move_piece(game, origin_x, origin_y, direction)
@@ -73,12 +82,15 @@ class Neutron:
 
     @staticmethod
     def __move_piece(self, origin_x, origin_y, direction):
+        # Checks if the move is valid
         valid, destination_x, destination_y = self.can_move(origin_x, origin_y, direction)
 
         if not valid:
             return False
 
         origin_piece = self.state[origin_x][origin_y]
+
+        # Updates the neutron position
         if origin_piece == Tile.Neutron:
             self.neutron_position = destination_x, destination_y
 
@@ -91,9 +103,7 @@ class Neutron:
 
         self.state[destination_x][destination_y] = origin_piece
 
-        # self.state[origin_x][origin_y], self.state[destination_x][destination_y] = \
-        #     self.state[destination_x][destination_y], self.state[origin_x][origin_y]
-
+        # Next player and/or turn
         if self.turn == Turn.Pawn:
             self.curr_player = Player.White if self.curr_player != Player.White else Player.Black
 
@@ -103,11 +113,13 @@ class Neutron:
 
         return True
 
+    # Checks if a move is valid
     def can_move(self, origin_x, origin_y, direction):
         if (origin_x < 0 or origin_x >= self.size
                 or origin_y < 0 or origin_y >= self.size):
             return False, origin_x, origin_y
 
+        # Is the selected piece valid?
         if self.turn == Turn.Neutron and self.state[origin_x][origin_y] != Tile.Neutron:
             return False, origin_x, origin_y
 
@@ -117,6 +129,7 @@ class Neutron:
         if self.turn == Turn.Pawn and self.curr_player == Player.Black and self.state[origin_x][origin_y] != Tile.Black:
             return False, origin_x, origin_y
 
+        # These variables indicate how much the piece will move per increment in each coordinate
         move_x = 0
         move_y = 0
 
@@ -139,6 +152,7 @@ class Neutron:
 
         hit = False
 
+        # Moves piece until it hits a wall or other piece
         while not hit:
             aux_x = next_x
             aux_y = next_y
@@ -152,11 +166,13 @@ class Neutron:
             elif self.state[next_x][next_y] != Tile.Empty:
                 hit = True
 
+        # Destination can't be the origin
         if aux_x == origin_x and aux_y == origin_y:
             return False, origin_x, origin_y
 
         return True, aux_x, aux_y
 
+    # Prints the board in the console window
     def draw_board(self):
 
         print(" ", end=" ")

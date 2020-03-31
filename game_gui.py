@@ -6,6 +6,7 @@ from neutron_util import BoardTypes, Player, Turn
 import gui_state
 from neutron_util import Tile
 
+# TODO: comment
 
 class GameGui:
     def __init__(self, game, type):

@@ -1,6 +1,7 @@
 from enum import Enum
 from neutron_util import BoardTypes, Tile, Direction
 
+# TODO: comment
 
 class BoardConstants:
     def __init__(self, board_type):

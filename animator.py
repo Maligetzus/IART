@@ -2,6 +2,7 @@ from neutron_util import get_time_miliseconds
 import pygame
 from gui_utils import get_resource_coords_from_board_coords
 
+# TODO: comment
 
 class Animator:
     def __init__(self, gui):
