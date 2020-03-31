@@ -1,5 +1,5 @@
 from neutron import Neutron
-from neutron_util import BoardTypes, Player, get_next_move, get_time_miliseconds, PlayerTypes, Turn
+from neutron_util import BoardTypes, Player, get_next_move, get_next_move_ordered, get_next_move_random, get_time_miliseconds, PlayerTypes, Turn
 import pygame
 
 
@@ -19,7 +19,12 @@ def play_game(board_type, depth, heuristic, depth_op, heuristic_op):
     while not game_ended:
         if game.curr_player == Player.White:
             calculation_start_time = get_time_miliseconds()
-            neutron_move, pawn_coords, pawn_move = get_next_move(game, heuristic, depth)
+            if game.player_type['White'] == PlayerTypes.CpuRandom:
+                neutron_move, pawn_coords, pawn_move = get_next_move_random(game, heuristic, depth)
+            elif game.player_type['White'] == PlayerTypes.CpuOrdered:
+                neutron_move, pawn_coords, pawn_move = get_next_move_ordered(game, heuristic, depth)
+            else:
+                neutron_move, pawn_coords, pawn_move = get_next_move(game, heuristic, depth)
             calculation_end_time = get_time_miliseconds()
 
             white_times.append((calculation_end_time - calculation_start_time) / 1000)
@@ -36,7 +41,12 @@ def play_game(board_type, depth, heuristic, depth_op, heuristic_op):
 
         else:
             calculation_start_time = get_time_miliseconds()
-            neutron_move, pawn_coords, pawn_move = get_next_move(game, heuristic_op, depth_op)
+            if game.player_type['Black'] == PlayerTypes.CpuRandom:
+                neutron_move, pawn_coords, pawn_move = get_next_move_random(game, heuristic_op, depth_op)
+            elif game.player_type['Black'] == PlayerTypes.CpuOrdered:
+                neutron_move, pawn_coords, pawn_move = get_next_move_ordered(game, heuristic_op, depth_op)
+            else:
+                neutron_move, pawn_coords, pawn_move = get_next_move(game, heuristic_op, depth_op)
             calculation_end_time = get_time_miliseconds()
 
             black_times.append((calculation_end_time - calculation_start_time)/1000)
@@ -68,7 +78,7 @@ def get_heuristic_depth(player_type):
         return 1, 3
     elif player_type == PlayerTypes.CpuL2:
         return 2, 3
-    elif player_type == PlayerTypes.CpuL3:
+    else:
         return 3, 3
 
 def print_results(results):
@@ -99,5 +109,5 @@ def benchmark(player1_type, player2_type, n_games, board_type):
     print_results(results)
 
 if __name__ == '__main__':
-    benchmark(PlayerTypes.CpuL3, PlayerTypes.CpuL2, 10, BoardTypes.Board_5X5)
+    benchmark(PlayerTypes.CpuL3, PlayerTypes.CpuOrdered, 1, BoardTypes.Board_5X5)
  

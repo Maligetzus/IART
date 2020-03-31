@@ -137,8 +137,8 @@ def minimax_alpha_beta_pruning(node, player, heuristic, max_depth, multiple_move
     for direction in Direction:
 
         if first_directions and\
-            (node.game.curr_player == Player.White and (direction == Direction.LeftUp or direction == Direction.RightUp or direction == Direction.Up)) or\
-            (node.game.curr_player == Player.Black and (direction == Direction.LeftDown or direction == Direction.RightDown or direction == Direction.Down)):
+            (node.game.curr_player == Player.White and (direction == Direction.LeftDown or direction == Direction.RightDown or direction == Direction.Down)) or\
+            (node.game.curr_player == Player.Black and (direction == Direction.LeftUp or direction == Direction.RightUp or direction == Direction.Up)):
             directions.insert(0, direction)
         else:
             directions.append(direction)
