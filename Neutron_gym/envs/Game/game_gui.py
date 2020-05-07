@@ -3,7 +3,7 @@ from pygame import Surface
 from pygame.locals import *
 from gui_utils import *
 from neutron_util import BoardTypes, Player, Turn, RenderMode
-import gui_state
+from gui_state import *
 from neutron_util import Tile
 
 class GameGui:
@@ -22,7 +22,7 @@ class GameGui:
             # Creates a black background to be, later applied to the screen
             self.load_background()
             # Stores the gui states; Handles events based on the current state
-            self.state = gui_state.GuiState(self)
+            self.state = GuiState(self)
 
     # Initializes pygame and game screen
     def init_window(self):

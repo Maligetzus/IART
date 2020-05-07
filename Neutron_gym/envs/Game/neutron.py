@@ -1,6 +1,5 @@
-import neutron_util as nutils
-from neutron_util import Player, Turn, Direction, Tile, BoardTypes, RenderMode
 import copy
+from neutron_util import Player, Turn, Direction, Tile, BoardTypes, RenderMode, victory, num_empty_fields_around_neutron
 from game_gui import GameGui
 from animator import Animator
 
@@ -58,15 +57,15 @@ class Neutron:
     def has_finished(self):
 
         # Has Black won?
-        if nutils.victory(Player.Black, self.state):
+        if victory(Player.Black, self.state):
             return True, Player.Black
 
         # Has White won?
-        if nutils.victory(Player.White, self.state):
+        if victory(Player.White, self.state):
             return True, Player.White
 
         # Is the neutron stuck?
-        if nutils.num_empty_fields_around_neutron(self.state, self.neutron_position) == 0:
+        if num_empty_fields_around_neutron(self.state, self.neutron_position) == 0:
             return True, Player.White if self.curr_player != Player.White else Player.Black
         else:
             return False, None
