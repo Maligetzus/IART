@@ -144,7 +144,7 @@ class GameLoop:
             if not self.waiting and not finished and self.game.turn != current_turn:
                 finished, winner = self.game.has_finished()
 
-            self.game.gui.display()
+            self.game.render()
 
         if self.analyse_cpu:
             print("Number of CPU plays: ", end="")

@@ -55,6 +55,11 @@ class Tile(Enum):
     Neutron = 3
 
 
+class RenderMode(Enum):
+    Disabled = 0
+    Ascii = 1
+    Pygame = 2
+
 # Class that represents the minimax tree node.
 class Node:
 

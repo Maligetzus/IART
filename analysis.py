@@ -1,10 +1,10 @@
 from neutron import Neutron
-from neutron_util import BoardTypes, Player, get_next_move, get_next_move_ordered, get_next_move_random, get_time_miliseconds, PlayerTypes, Turn
+from neutron_util import *
 import pygame
 
 
-def play_game(board_type, depth, heuristic, depth_op, heuristic_op):
-    game = Neutron(board_type=board_type)
+def play_game(board_type, depth, heuristic, depth_op, heuristic_op, render_mode=RenderMode.Disabled):
+    game = Neutron(board_type=board_type, render_mode=render_mode)
 
     game.player_type['White'] = PlayerTypes.Player
     game.player_type['Black'] = PlayerTypes.Player
@@ -61,6 +61,9 @@ def play_game(board_type, depth, heuristic, depth_op, heuristic_op):
             game.move_piece(pawn_coords[0], pawn_coords[1], pawn_move)
             n_black_plays += 1
 
+        if render_mode != RenderMode.Disabled:
+            game.render()
+
         game_ended = game.has_finished()[0]
 
     print("Game ended")
@@ -95,19 +98,20 @@ def print_results(results):
     print("White player made, in average, {:.6f}".format(total_white_plays / len(results)), " in about {:.6f}".format(total_white_average_time / len(results)), "s each!")
     print("Black player made, in average, {:.6f}".format(total_black_plays / len(results)), " in about {:.6f}".format(total_black_average_time / len(results)), "s each!")
 
-def benchmark(player1_type, player2_type, n_games, board_type):
+def benchmark(player1_type, player2_type, n_games, board_type, render_mode):
     p1_heur, p1_dept = get_heuristic_depth(player1_type)
     p2_heur, p2_dept = get_heuristic_depth(player2_type)
     count = 0
     results = []
     while count < n_games:
-        result = play_game(board_type, p1_dept, p1_heur, p2_dept, p2_heur)
+        result = play_game(board_type, p1_dept, p1_heur, p2_dept, p2_heur, render_mode=render_mode)
         results.append(result)
         count += 1
 
     pygame.quit()
     print_results(results)
 
+
 if __name__ == '__main__':
-    benchmark(PlayerTypes.CpuL3, PlayerTypes.CpuOrdered, 1, BoardTypes.Board_5X5)
+    benchmark(PlayerTypes.CpuGreedy, PlayerTypes.CpuRandom, 1, BoardTypes.Board_5X5, RenderMode.Disabled)
  

@@ -1,12 +1,13 @@
 import neutron_util as nutils
-from neutron_util import Player, Turn, Direction, Tile, BoardTypes
+from neutron_util import Player, Turn, Direction, Tile, BoardTypes, RenderMode
 import copy
 from game_gui import GameGui
 from animator import Animator
 
+
 class Neutron:
 
-    def __init__(self, board_type, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1)):
+    def __init__(self, board_type, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1), render_mode=RenderMode.Pygame):
         self.board_type = board_type
         if board_type == BoardTypes.Board_5X5:
             self.size = 5
@@ -19,6 +20,7 @@ class Neutron:
         self.neutron_position = neutron_position    # for easier access
         self.player_type = {'White': None, 'Black': None}   # indicates each player type (human, cpu, etc)
         self.animator = None
+        self.render_mode = render_mode;
 
     # Initializes the game
     def start(self, starting_player=Player.White):
@@ -45,8 +47,10 @@ class Neutron:
 
             self.state.append(row)
 
-        self.gui = GameGui(self, self.board_type)
-        self.animator = Animator(self.gui)
+        if self.render_mode != RenderMode.Disabled:
+            self.gui = GameGui(self, self.board_type, self.render_mode)
+            if self.render_mode == RenderMode.Pygame:
+                self.animator = Animator(self.gui)
 
         return True, "Successfuly started the game"
 
@@ -79,6 +83,9 @@ class Neutron:
         success = self.__move_piece(game, origin_x, origin_y, direction)
 
         return success, game
+
+    def render(self):
+        self.gui.display()
 
     @staticmethod
     def __move_piece(self, origin_x, origin_y, direction):

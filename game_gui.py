@@ -2,27 +2,27 @@ import pygame
 from pygame import Surface
 from pygame.locals import *
 from gui_utils import *
-from neutron_util import BoardTypes, Player, Turn
+from neutron_util import BoardTypes, Player, Turn, RenderMode
 import gui_state
 from neutron_util import Tile
 
-# TODO: comment
-
 class GameGui:
-    def __init__(self, game, type):
+    def __init__(self, game, type, render_mode = RenderMode.Pygame):
         # Neutron class instance
         self.game = game
         self.board = game.state
-        # Stores board gui related constants
-        self.constants = BoardConstants(type)
-        # Initializes pygame and game screen
-        self.init_window()
-        # Loads all the game resources
-        self.load_resources()
-        # Creates a black background to be, later applied to the screen
-        self.load_background()
-        # Stores the gui states; Handles events based on the current state
-        self.state = gui_state.GuiState(self)
+        self.render_mode = render_mode;
+        if self.render_mode == RenderMode.Pygame:
+            # Stores board gui related constants
+            self.constants = BoardConstants(type)
+            # Initializes pygame and game screen
+            self.init_window()
+            # Loads all the game resources
+            self.load_resources()
+            # Creates a black background to be, later applied to the screen
+            self.load_background()
+            # Stores the gui states; Handles events based on the current state
+            self.state = gui_state.GuiState(self)
 
     # Initializes pygame and game screen
     def init_window(self):
@@ -157,6 +157,10 @@ class GameGui:
 
     # Draws Everything
     def display(self):
+        if self.render_mode == RenderMode.Ascii:
+            self.game.draw_board()
+            return
+
         # Puts the screen black
         self.screen.blit(self.background, (0, 0))
         # Displays side-panel
