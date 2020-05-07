@@ -1,10 +1,10 @@
+import pathlib
 import pygame, sys
 from pygame import Surface
 from pygame.locals import *
 from game_loop import GameLoop
 from gui_utils import draw_text
 from neutron_util import PlayerTypes, BoardTypes
-
 
 class MainMenu:
     def __init__(self):
@@ -13,7 +13,7 @@ class MainMenu:
         # Sets window title
         pygame.display.set_caption('Neutron')
         # Sets window icon
-        icon = pygame.image.load('resources/logo.png')
+        icon = pygame.image.load(str(pathlib.Path(__file__).parent.absolute()) + '/resources/logo.png')
         pygame.display.set_icon(icon)
         # Creates a 650x575 window
         self.screen = pygame.display.set_mode((650, 575), 0, 32)
@@ -32,7 +32,7 @@ class MainMenu:
         # Stores the possible board sizes
         self.board_size_array = [BoardTypes.Board_5X5, BoardTypes.Board_7X7]
         # Main menu image
-        self.game_image = pygame.image.load('resources/main_menu.jpg')
+        self.game_image = pygame.image.load(str(pathlib.Path(__file__).parent.absolute()) + '/resources/main_menu.jpg')
 
     def start(self):
         while True:

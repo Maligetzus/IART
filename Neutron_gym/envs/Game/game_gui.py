@@ -1,4 +1,5 @@
 import pygame
+import pathlib
 from pygame import Surface
 from pygame.locals import *
 from gui_utils import *
@@ -41,10 +42,10 @@ class GameGui:
         self.side_panel_font_smaller = pygame.font.SysFont(None, 40, False)
 
         # Load Pieces and Board
-        self.red_piece_image = pygame.image.load('resources/piece_red.png')
-        self.blue_piece_image = pygame.image.load('resources/piece_blue.png')
-        self.neutron_piece_image = pygame.image.load('resources/piece_neutron.png')
-        self.game_board_tile = pygame.image.load('resources/board_tile.png')
+        self.red_piece_image = pygame.image.load(str(pathlib.Path(__file__).parent.absolute()) + '/resources/piece_red.png')
+        self.blue_piece_image = pygame.image.load(str(pathlib.Path(__file__).parent.absolute()) + '/resources/piece_blue.png')
+        self.neutron_piece_image = pygame.image.load(str(pathlib.Path(__file__).parent.absolute()) + '/resources/piece_neutron.png')
+        self.game_board_tile = pygame.image.load(str(pathlib.Path(__file__).parent.absolute()) + '/resources/board_tile.png')
 
         # If the board is 7x7, down-scales resources to fit in the same space
         if (self.constants.BOARD_TYPE == BoardTypes.Board_7X7):
