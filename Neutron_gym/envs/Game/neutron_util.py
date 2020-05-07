@@ -1,3 +1,4 @@
+import math
 from enum import Enum
 import time
 import random
@@ -59,6 +60,7 @@ class RenderMode(Enum):
     Disabled = 0
     Ascii = 1
     Pygame = 2
+
 
 # Class that represents the minimax tree node.
 class Node:
@@ -401,3 +403,21 @@ def victory(player, state):
 # Function that returns current time in miliseconds.
 def get_time_miliseconds():
     return int(round(time.time() * 1000))
+
+
+def encode_state(state):
+    encoded_state=""
+    for i in range(len(state)):
+        for j in range(len(state[0])):
+            encoded_state+=str(state[i][j])
+
+
+def decode_state(encoded_state):
+    side = int(math.sqrt(len(encoded_state)))
+    state = []
+    for i in range(side):
+        line = []
+        for j in range(side):
+            line.append(encoded_state[side*i + j])
+
+        state.append(line)

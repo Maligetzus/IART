@@ -8,6 +8,7 @@ class Neutron:
 
     def __init__(self, board_type, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1), render_mode=RenderMode.Pygame):
         self.board_type = board_type
+        self.render_mode = render_mode
         if board_type == BoardTypes.Board_5X5:
             self.size = 5
         else:
@@ -19,7 +20,6 @@ class Neutron:
         self.neutron_position = neutron_position    # for easier access
         self.player_type = {'White': None, 'Black': None}   # indicates each player type (human, cpu, etc)
         self.animator = None
-        self.render_mode = render_mode;
 
     # Initializes the game
     def start(self, starting_player=Player.White):
@@ -209,36 +209,36 @@ class Neutron:
 
         print("\n", end="")
 
-    def hash_state(self):
-        result = 0
-        current_prime = 1
-        for i in range(0, self.size):
-            for j in range(0, self.size):
-                result += self.state[i][j].value * current_prime
-                current_prime = self.__find_next_prime(current_prime)
-        return result
-
-    @staticmethod
-    def __find_next_prime(n):
-        a = n
-        b = 2*n
-        for p in range(a, b):
-            for i in range(2, p):
-                if p % i == 0:
-                    break
-            else:
-                return p
-
-    @staticmethod
-    def square_to_index(square):
-        x = -1
-        y = -1
-
-        if len(square) != 2:
-            return x, y
-
-        x = ord(square[0].upper()) - ord('A')
-
-        y = int(square[1]) - 1
-
-        return x, y
+    # def hash_state(self):
+    #     result = 0
+    #     current_prime = 1
+    #     for i in range(0, self.size):
+    #         for j in range(0, self.size):
+    #             result += self.state[i][j].value * current_prime
+    #             current_prime = self.__find_next_prime(current_prime)
+    #     return result
+    #
+    # @staticmethod
+    # def __find_next_prime(n):
+    #     a = n
+    #     b = 2*n
+    #     for p in range(a, b):
+    #         for i in range(2, p):
+    #             if p % i == 0:
+    #                 break
+    #         else:
+    #             return p
+    #
+    # @staticmethod
+    # def square_to_index(square):
+    #     x = -1
+    #     y = -1
+    #
+    #     if len(square) != 2:
+    #         return x, y
+    #
+    #     x = ord(square[0].upper()) - ord('A')
+    #
+    #     y = int(square[1]) - 1
+    #
+    #     return x, y
