@@ -84,6 +84,7 @@ def get_heuristic_depth(player_type):
     else:
         return 3, 3
 
+
 def print_results(results):
     total_white_plays = 0
     total_black_plays = 0
@@ -97,6 +98,7 @@ def print_results(results):
 
     print("White player made, in average, {:.6f}".format(total_white_plays / len(results)), " in about {:.6f}".format(total_white_average_time / len(results)), "s each!")
     print("Black player made, in average, {:.6f}".format(total_black_plays / len(results)), " in about {:.6f}".format(total_black_average_time / len(results)), "s each!")
+
 
 def benchmark(player1_type, player2_type, n_games, board_type, render_mode):
     p1_heur, p1_dept = get_heuristic_depth(player1_type)
