@@ -1,1 +1,0 @@
-# IART Project #2 - Neutron board game in Python (using Reinforcement learning with Open Ai Gym)

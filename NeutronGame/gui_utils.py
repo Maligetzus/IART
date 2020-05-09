@@ -1,5 +1,5 @@
 from enum import Enum
-from neutron_util import BoardTypes, Tile, Direction
+from NeutronGame.neutron_util import BoardTypes, Tile, Direction
 
 # Used in game_gui to store board display constants
 class BoardConstants:

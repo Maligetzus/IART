@@ -1,4 +1,4 @@
-from main_menu import MainMenu
+from NeutronGame.main_menu import MainMenu
 
 
 if __name__ == '__main__':

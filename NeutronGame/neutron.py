@@ -1,7 +1,7 @@
 import copy
-from neutron_util import Player, Turn, Direction, Tile, BoardTypes, RenderMode, victory, num_empty_fields_around_neutron
-from game_gui import GameGui
-from animator import Animator
+from NeutronGame.neutron_util import Player, Turn, Direction, Tile, BoardTypes, RenderMode, victory, num_empty_fields_around_neutron
+from NeutronGame.game_gui import GameGui
+from NeutronGame.animator import Animator
 
 
 class Neutron:

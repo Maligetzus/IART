@@ -1,4 +1,4 @@
-from gui_utils import *
+from NeutronGame.gui_utils import *
 import pygame.mouse
 
 

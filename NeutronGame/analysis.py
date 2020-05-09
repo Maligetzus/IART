@@ -1,5 +1,5 @@
-from neutron import Neutron
-from neutron_util import *
+from NeutronGame.neutron import Neutron
+from NeutronGame.neutron_util import *
 import pygame
 
 

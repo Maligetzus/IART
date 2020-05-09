@@ -1,16 +1,15 @@
-import Neutron_gym
-from gym import spaces
+import gym
 import numpy as np
-from Neutron_gym.envs.Game.neutron import Neutron
-from Neutron_gym.envs.Game.neutron import *
+from NeutronGame.neutron import Neutron
+from NeutronGame.neutron import *
 
 class NeutronEnv(gym.Env):
     def __init__(self, board_type, player):
         self.player = player
         self.board_type = board_type
         self.game = Neutron(board_type, curr_player=player)
-        self.observation_space = spaces.Box(0, 3, (game.size, game.size), np.int32)
-        self.action_space = spaces.Discrete(game.size * 8)
+        self.observation_space = gym.spaces.Box(0, 3, (self.game.size, self.game.size), np.int32)
+        self.action_space = gym.spaces.Discrete(self.game.size * 8)
 
     def reset(self):
         self.game = Neutron(board_type)

@@ -1,6 +1,6 @@
 import pygame
-from neutron_util import get_time_miliseconds
-from gui_utils import get_piece_coords_from_board_coords
+from NeutronGame.neutron_util import get_time_miliseconds
+from NeutronGame.gui_utils import get_piece_coords_from_board_coords
 
 
 class Animator:

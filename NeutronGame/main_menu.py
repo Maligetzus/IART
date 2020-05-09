@@ -2,9 +2,9 @@ import pathlib
 import pygame, sys
 from pygame import Surface
 from pygame.locals import *
-from game_loop import GameLoop
-from gui_utils import draw_text
-from neutron_util import PlayerTypes, BoardTypes
+from NeutronGame.game_loop import GameLoop
+from NeutronGame.gui_utils import draw_text
+from NeutronGame.neutron_util import PlayerTypes, BoardTypes
 
 class MainMenu:
     def __init__(self):

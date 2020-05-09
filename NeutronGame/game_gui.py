@@ -2,10 +2,10 @@ import pygame
 import pathlib
 from pygame import Surface
 from pygame.locals import *
-from gui_utils import *
-from neutron_util import BoardTypes, Player, Turn, RenderMode
-from gui_state import *
-from neutron_util import Tile
+from NeutronGame.gui_utils import *
+from NeutronGame.neutron_util import BoardTypes, Player, Turn, RenderMode
+from NeutronGame.gui_state import *
+from NeutronGame.neutron_util import Tile
 
 class GameGui:
     def __init__(self, game, type, render_mode = RenderMode.Pygame):

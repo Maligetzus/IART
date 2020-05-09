@@ -1,8 +1,8 @@
 import pygame
 import time
 import threading
-from neutron import Neutron
-from neutron_util import get_next_move, get_next_move_random, get_next_move_ordered, BoardTypes, PlayerTypes, Turn
+from NeutronGame.neutron import Neutron
+from NeutronGame.neutron_util import get_next_move, get_next_move_random, get_next_move_ordered, BoardTypes, PlayerTypes, Turn
 from pygame.locals import *
 
 class GameLoop:
