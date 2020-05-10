@@ -3,6 +3,7 @@ import random
 import numpy as np
 from NeutronGame.neutron_util import RenderMode, Turn, Direction, Tile, Player, BoardTypes
 from NeutronGame.neutron import Neutron
+from enum import Enum
 
 class Opponent(Enum):
     Random = "random"

@@ -1,5 +1,4 @@
-import numpy as np
 import gym
-import random
+import NeutronRL.envs.neutron_env
 
-env = gym.make("Neutron-5x5-White")
+env = gym.make("Neutron-White-v0")

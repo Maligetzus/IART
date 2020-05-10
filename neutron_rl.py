@@ -1,3 +1,1 @@
-import NeutronRL
-
-exec(open("q_learning.py").read())
+exec(open("./NeutronRL/q_learning.py").read())
