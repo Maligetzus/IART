@@ -16,7 +16,7 @@ class NeutronEnv(gym.Env):
         self.render_mode = RenderMode.Ascii
         self.game = Neutron(self.board_type, curr_player=player, render_mode=self.render_mode)
         self.observation_space = gym.spaces.Box(low=0, high=3, shape=(self.game.size, self.game.size), dtype=np.int32)
-        self.action_space = gym.spaces.Box(low=np.array([0, 1, 0]), high=np.array([7, 5, 7]), dtype=np.int32)
+        self.action_space = gym.spaces.Box(low=np.array([0, 0, 0]), high=np.array([7, 4, 7]), dtype=np.int32)
         
         self.game.start()
 
@@ -51,7 +51,7 @@ class NeutronEnv(gym.Env):
                 pawn_num = action[1]
                 pawn = Tile.White if self.player == Player.White else Tile.Black
 
-                counter = 0
+                counter = -1
 
                 for i in range(len(state)):
                     for j in range(len(state[i])):
@@ -69,7 +69,7 @@ class NeutronEnv(gym.Env):
         
         obs = self.__encode_state__()
 
-        ended, winner = self.game.has_finished
+        ended, winner = self.game.has_finished()
 
         if ended:
             if winner == self.player:
@@ -98,12 +98,9 @@ class NeutronEnv(gym.Env):
         return ind
 
     def encode_action(self, action):    
-        values = np.array(action)
-        values[1] -= 1
-
         res = 0
         for i in range(3):
-            res = res * self.encoding_factors[i] + values[i]
+            res = res * self.encoding_factors[i] + action[i]
 
         return res
 
@@ -130,9 +127,9 @@ class NeutronEnv(gym.Env):
         while not success_play:
             pawn_coor_x = -1
             pawn_coor_y = -1
-            pawn_num = random.randint(1,5)
+            pawn_num = random.randint(0,4)
 
-            counter = 0
+            counter = -1
 
             for i in range(len(state)):
                 for j in range(len(state[i])):

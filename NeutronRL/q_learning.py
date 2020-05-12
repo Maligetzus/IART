@@ -45,18 +45,21 @@ class QLearning():
         rewards = []
 
         for current_episode in range(self.max_episodes):
-            state = self.env.reset()
             step = 0
             done = False
             total_rewards = 0
 
+            state = self.env.reset()
+
+            if state not in self.qtable:
+                self.qtable[state] = np.zeros(self.action_size)
+
             for step in range(self.max_steps):
+                print(f"Step {step}")
+                
                 exp_exp_tradeoff = random.uniform(0, 1)
 
                 if exp_exp_tradeoff > epsilon:
-                    if state not in self.qtable:
-                        self.qtable[state] = np.zeros(self.action_size)
-
                     action_ind = np.argmax(self.qtable[state])
                     action = self.env.decode_action(action_ind)
                 else:
@@ -65,8 +68,10 @@ class QLearning():
 
                 new_state, reward, done, info = self.env.step(action)
 
-                self.qtable[state][action_ind] = self.qtable[state][action_ind] + self.learning_rate * (
-                            reward + self.gamma * np.max(self.qtable[new_state]) - self.qtable[state][action_ind])
+                if new_state not in self.qtable:
+                    self.qtable[new_state] = np.zeros(self.action_size)
+
+                self.qtable[state][action_ind] = self.qtable[state][action_ind] + self.learning_rate * (reward + self.gamma * np.max(self.qtable[new_state]) - self.qtable[state][action_ind])
 
                 total_rewards += reward
                 state = new_state
