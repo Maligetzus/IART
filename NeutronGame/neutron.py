@@ -6,7 +6,8 @@ from NeutronGame.animator import Animator
 
 class Neutron:
 
-    def __init__(self, board_type, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1), render_mode=RenderMode.Pygame):
+    def __init__(self, board_type, curr_player=Player.White, turn=Turn.Neutron, state=None, neutron_position=(-1, -1),
+                 render_mode=RenderMode.Pygame):
         self.board_type = board_type
         self.render_mode = render_mode
         if board_type == BoardTypes.Board_5X5:

@@ -8,7 +8,7 @@ from NeutronGame.gui_state import *
 from NeutronGame.neutron_util import Tile
 
 class GameGui:
-    def __init__(self, game, type, render_mode = RenderMode.Pygame):
+    def __init__(self, game, type, render_mode=RenderMode.Pygame):
         # Neutron class instance
         self.game = game
         self.board = game.state

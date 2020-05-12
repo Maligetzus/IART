@@ -13,7 +13,8 @@ class NeutronEnv(gym.Env):
         self.player = player
         self.opponent = opponent
         self.board_type = board_type
-        self.game = Neutron(self.board_type, curr_player=player, render_mode=RenderMode.Ascii)
+        self.render_mode = RenderMode.Ascii
+        self.game = Neutron(self.board_type, curr_player=player, render_mode=self.render_mode)
         self.observation_space = gym.spaces.Box(low=0, high=3, shape=(self.game.size, self.game.size), dtype=np.int32)
         self.action_space = gym.spaces.Box(low=np.array([0, 1, 0]), high=np.array([7, 5, 7]), dtype=np.int32)
         
@@ -22,7 +23,7 @@ class NeutronEnv(gym.Env):
         self.encoding_factors = [len(Direction), self.game.size, len(Direction)]
 
     def reset(self):
-        self.game = Neutron(self.board_type)
+        self.game = Neutron(self.board_type, render_mode=self.render_mode)
         self.game.start()
 
         if self.game.curr_player != self.player:
