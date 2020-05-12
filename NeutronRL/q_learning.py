@@ -45,6 +45,8 @@ class QLearning():
         rewards = []
 
         for current_episode in range(self.max_episodes):
+            print(f"Episode {current_episode}")
+
             step = 0
             done = False
             total_rewards = 0
@@ -56,7 +58,7 @@ class QLearning():
 
             for step in range(self.max_steps):
                 print(f"Step {step}")
-                
+
                 exp_exp_tradeoff = random.uniform(0, 1)
 
                 if exp_exp_tradeoff > epsilon:
@@ -84,4 +86,4 @@ class QLearning():
             rewards.append(total_rewards)
 
         print("Score over time: " + str(sum(rewards)/self.max_episodes))
-        print(qtable)
+        print(self.qtable)

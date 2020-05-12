@@ -33,11 +33,9 @@ class NeutronEnv(gym.Env):
         return self.__encode_state__()
 
     def step(self, action):
-        success_play = False
+        success_play = True
 
         if self.game.curr_player == self.player:
-            success_play = True
-
             if self.game.turn == Turn.Neutron:
                 neutron_pos = self.game.neutron_position
 
@@ -64,9 +62,14 @@ class NeutronEnv(gym.Env):
 
                 success_play = self.game.move_piece(pawn_coor_x, pawn_coor_y, Direction(action[2]))
 
-        if self.opponent == Opponent.Random:
-            self.__random_play__()
-        
+        if(success_play):
+            print("Opponent play")
+
+            if self.opponent == Opponent.Random:
+                self.__random_play__()
+            
+            print("Opponent played")
+
         obs = self.__encode_state__()
 
         ended, winner = self.game.has_finished()
@@ -115,14 +118,20 @@ class NeutronEnv(gym.Env):
     def __random_play__(self):
         success_play = False
 
+        print("Will move neutron")
+
         if self.game.turn == Turn.Neutron:
             neutron_pos = self.game.neutron_position
 
             while not success_play:
                 success_play = self.game.move_piece(neutron_pos[0], neutron_pos[1], Direction(random.randint(0,7)))
 
+        print("Neutron moved")
+
         state = self.game.state
         pawn = Tile.Black if self.player == Player.White else Tile.White
+
+        print("Will move piece")
 
         while not success_play:
             pawn_coor_x = -1
@@ -141,3 +150,5 @@ class NeutronEnv(gym.Env):
                             pawn_coor_y = j
 
             success_play = self.game.move_piece(pawn_coor_x, pawn_coor_y, Direction(random.randint(0,7)))
+        
+        print("Piece moved")
