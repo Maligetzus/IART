@@ -13,12 +13,17 @@ class NeutronEnv(gym.Env):
         self.player = player
         self.opponent = opponent
         self.board_type = board_type
-        self.game = Neutron(board_type, curr_player=player, render_mode=RenderMode.Ascii)
+        self.game = Neutron(self.board_type, curr_player=player, render_mode=RenderMode.Ascii)
         self.observation_space = gym.spaces.Box(low=0, high=3, shape=(self.game.size, self.game.size), dtype=np.int32)
         self.action_space = gym.spaces.Box(low=np.array([0, 1, 0]), high=np.array([7, 5, 7]), dtype=np.int32)
+        
+        self.game.start()
+
+        self.encoding_factors = [len(Direction), self.game.size, len(Direction)]
 
     def reset(self):
-        self.game = Neutron(board_type)
+        self.game = Neutron(self.board_type)
+        self.game.start()
 
         if self.game.curr_player != self.player:
             if self.opponent == Opponent.Random:
@@ -86,10 +91,28 @@ class NeutronEnv(gym.Env):
 
         for i in range(len(self.game.state)):
             for j in range(len(self.game.state[i])):
-                ind += self.game.state[i][j] * (4**weight)
+                ind += self.game.state[i][j].value * (4**weight)
                 weight += 1
 
         return ind
+
+    def encode_action(self, action):    
+        values = np.array(action)
+        values[1] -= 1
+
+        res = 0
+        for i in range(3):
+            res = res * self.encoding_factors[i] + values[i]
+
+        return res
+
+    def decode_action(self, action_index):
+        res = np.zeros(3)
+        for i in range(2, -1, -1):
+            res[i] = action_index % self.encoding_factors[i]
+            action_index = action_index // self.encoding_factors[i]
+
+        return tuple((res).astype(int))
 
     def __random_play__(self):
         success_play = False
