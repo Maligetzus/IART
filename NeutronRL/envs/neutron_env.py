@@ -9,7 +9,8 @@ class Opponent(Enum):
     Random = "random"
 
 class NeutronEnv(gym.Env):
-    def __init__(self, board_type=BoardTypes.Board_5X5, player=Player.White, opponent=Opponent.Random):
+    def __init__(self, board_type=BoardTypes.Board_5X5, player=Player.White, opponent=Opponent.Random, log=False):
+        self.log = log
         self.player = player
         self.opponent = opponent
         self.board_type = board_type
@@ -63,12 +64,12 @@ class NeutronEnv(gym.Env):
                 success_play = self.game.move_piece(pawn_coor_x, pawn_coor_y, Direction(action[2]))
 
         if(success_play):
-            print("Opponent play")
+            self.__log__("Opponent play")
 
             if self.opponent == Opponent.Random:
                 self.__random_play__()
             
-            print("Opponent played")
+            self.__log__("Opponent played")
 
         obs = self.__encode_state__()
 
@@ -118,7 +119,7 @@ class NeutronEnv(gym.Env):
     def __random_play__(self):
         success_play = False
 
-        print("Will move neutron")
+        self.__log__("Will move neutron")
 
         if self.game.turn == Turn.Neutron:
             neutron_pos = self.game.neutron_position
@@ -126,12 +127,12 @@ class NeutronEnv(gym.Env):
             while not success_play:
                 success_play = self.game.move_piece(neutron_pos[0], neutron_pos[1], Direction(random.randint(0,7)))
 
-        print("Neutron moved")
+        self.__log__("Neutron moved")
 
         state = self.game.state
         pawn = Tile.Black if self.player == Player.White else Tile.White
 
-        print("Will move piece")
+        self.__log__("Will move piece")
 
         while not success_play:
             pawn_coor_x = -1
@@ -151,4 +152,8 @@ class NeutronEnv(gym.Env):
 
             success_play = self.game.move_piece(pawn_coor_x, pawn_coor_y, Direction(random.randint(0,7)))
         
-        print("Piece moved")
+        self.__log__("Piece moved")
+
+    def __log__(self, text, end="\n"):
+        if self.log:
+            print(text, end=end)

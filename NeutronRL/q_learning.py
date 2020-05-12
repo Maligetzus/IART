@@ -86,4 +86,15 @@ class QLearning():
             rewards.append(total_rewards)
 
         print("Score over time: " + str(sum(rewards)/self.max_episodes))
-        print(self.qtable)
+
+    
+    def print_qtable(self):
+        for key in self.qtable:
+            print(f"{key}: [", end="")
+            
+            for value in self.qtable[key]:
+                if value != 0:
+                    action = np.where(self.qtable[key] == value)
+                    print(f"{action[0][0]}: {value}", end=" ")
+
+            print("]", end="\n")
