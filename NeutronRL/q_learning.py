@@ -6,7 +6,7 @@ import NeutronRL.envs.neutron_env
 class QLearning():
 
     def __init__(self,
-                env="Neutron-White-v0",
+                env="Neutron-5x5-White-Easy-v0",
                 max_episodes=100,
                 learning_rate=0.8,
                 max_steps=99,
@@ -14,7 +14,10 @@ class QLearning():
                 starting_epsilon=0.1,
                 max_epsilon=1.0,
                 min_epsilon=0.01,
-                decay_rate=0.001):
+                decay_rate=0.001,
+                render=False):
+
+        self.render = render
 
         self.env = gym.make(env)
 
@@ -77,6 +80,9 @@ class QLearning():
 
                 total_rewards += reward
                 state = new_state
+
+                if self.render:
+                    self.env.render()
 
                 if done:
                     break

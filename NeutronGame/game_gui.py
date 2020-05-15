@@ -12,7 +12,7 @@ class GameGui:
         # Neutron class instance
         self.game = game
         self.board = game.state
-        self.render_mode = render_mode;
+        self.render_mode = render_mode
         if self.render_mode == RenderMode.Pygame:
             # Stores board gui related constants
             self.constants = BoardConstants(type)
