@@ -10,8 +10,8 @@ class Opponent(Enum):
     Easy = "easy"
 
 class NeutronEnv(gym.Env):
-    def __init__(self, board_type=BoardTypes.Board_5X5, player=Player.White, opponent=Opponent.Random, log=False):
-        self.log = log
+    def __init__(self, board_type=BoardTypes.Board_5X5, player=Player.White, opponent=Opponent.Random):
+        self.log = False
         self.player = player
         self.opponent = opponent
         self.board_type = board_type
@@ -94,6 +94,9 @@ class NeutronEnv(gym.Env):
 
     def render(self, mode='human', close=False):
         self.game.render()
+
+    def set_logging(self, log):
+        self.log = log
 
     def __encode_state__(self):
         ind = 0

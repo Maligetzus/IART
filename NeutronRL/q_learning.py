@@ -15,11 +15,16 @@ class QLearning():
                 max_epsilon=1.0,
                 min_epsilon=0.01,
                 decay_rate=0.001,
-                render=False):
+                render=False,
+                log=True,
+                log_detail=False):
 
         self.render = render
 
         self.env = gym.make(env)
+
+        self.env.set_logging(log_detail)
+        self.log = log
 
         action_size_aux = tuple((self.env.action_space.high - self.env.action_space.low + np.ones(self.env.action_space.shape)).astype(int))
 
@@ -28,7 +33,8 @@ class QLearning():
         for num in action_size_aux:
             self.action_size *= num
 
-        print(f"Action size = {self.action_size}")
+        if self.log:
+            print(f"Action size = {self.action_size}")
     
         self.qtable = { }
 
@@ -48,7 +54,8 @@ class QLearning():
         rewards = []
 
         for current_episode in range(self.max_episodes):
-            print(f"Episode {current_episode}")
+            if self.log:
+                print(f"Episode {current_episode}")
 
             step = 0
             done = False
@@ -60,7 +67,8 @@ class QLearning():
                 self.qtable[state] = np.zeros(self.action_size)
 
             for step in range(self.max_steps):
-                print(f"Step {step}")
+                if self.log:
+                    print(f"Step {step}")
 
                 exp_exp_tradeoff = random.uniform(0, 1)
 
