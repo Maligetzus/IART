@@ -36,7 +36,7 @@ class QLearning():
         if self.log:
             print(f"Action size = {self.action_size}")
     
-        self.qtable = { }
+        self.reset_qtable()
 
         self.max_episodes = max_episodes # Total episodes
         self.learning_rate = learning_rate  # Learning rate
@@ -112,3 +112,12 @@ class QLearning():
                     print(f"{action[0][0]}: {value}", end=" ")
 
             print("]", end="\n")
+
+    def reset_qtable(self):
+        self.qtable = { }
+
+    def import_qtable(self, qtable):
+        self.qtable = qtable
+
+    def export_qtable(self):
+        return self.qtable
