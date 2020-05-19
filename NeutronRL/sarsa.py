@@ -53,7 +53,11 @@ class SARSA(EnvAlgorithm):
             epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon) * np.exp(-self.decay_rate * current_episode)
             rewards.append(total_rewards)
 
-        print("Score over time: " + str(sum(rewards)/self.max_episodes))
+        score = sum(rewards)/self.max_episodes
+
+        print("Score over time: " + str(score))
+
+        return score, rewards
 
     def __get_action__(self, epsilon, state):
         exp_exp_tradeoff = random.uniform(0, 1)
