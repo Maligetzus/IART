@@ -14,6 +14,7 @@ class EnvAlgorithm():
                 starting_epsilon=0.1,
                 max_epsilon=1.0,
                 min_epsilon=0.01,
+                decay_rate=0.001,
                 render=False,
                 log=True,
                 log_detail=False):
@@ -46,6 +47,7 @@ class EnvAlgorithm():
         self.starting_epsilon = starting_epsilon
         self.max_epsilon = max_epsilon
         self.min_epsilon = min_epsilon
+        self.decay_rate = decay_rate
     
     def print_qtable(self):
         for key in self.qtable:
