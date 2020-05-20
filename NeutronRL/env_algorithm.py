@@ -3,6 +3,11 @@ import gym
 import numpy as np
 import NeutronRL.envs.neutron_env
 
+class EpsilonDecay(Enum):
+    Exponential = "exp"
+    Linear = "linear"
+    NoDecay = "none"
+
 class EnvAlgorithm():
 
     def __init__(self,
@@ -15,6 +20,7 @@ class EnvAlgorithm():
                 max_epsilon=1.0,
                 min_epsilon=0.01,
                 decay_rate=0.001,
+                epsilon_decay=EpsilonDecay.Exponential,
                 render=False,
                 log=True,
                 log_detail=False):
@@ -48,6 +54,7 @@ class EnvAlgorithm():
         self.max_epsilon = max_epsilon
         self.min_epsilon = min_epsilon
         self.decay_rate = decay_rate
+        self.epsilon_decay = epsilon_decay
     
     def print_qtable(self):
         for key in self.qtable:

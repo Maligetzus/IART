@@ -2,7 +2,7 @@ import random
 import gym
 import numpy as np
 import NeutronRL.envs.neutron_env
-from NeutronRL.env_algorithm import EnvAlgorithm
+from NeutronRL.env_algorithm import EnvAlgorithm, EpsilonDecay
 
 class QLearning(EnvAlgorithm):
 
@@ -53,7 +53,11 @@ class QLearning(EnvAlgorithm):
                     break
 
             # Reduce epsilon (because we need less and less exploration)
-            epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon) * np.exp(-self.decay_rate * current_episode)
+            if self.epsilon_decay == EpsilonDecay.Exponential:
+                epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon) * np.exp(-self.decay_rate * current_episode)
+            elif self.epsilon_decay == EpsilonDecay.Linear:
+                epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon) * (-self.decay_rate * current_episode)
+
             rewards.append(total_rewards)
 
         score = sum(rewards)/self.max_episodes
