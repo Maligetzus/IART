@@ -2,6 +2,7 @@ import random
 import gym
 import numpy as np
 import NeutronRL.envs.neutron_env
+from enum import Enum
 
 class EpsilonDecay(Enum):
     Exponential = "exp"
