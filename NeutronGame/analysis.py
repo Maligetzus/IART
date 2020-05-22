@@ -1,5 +1,7 @@
 from NeutronGame.neutron import Neutron
 from NeutronGame.neutron_util import *
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
 

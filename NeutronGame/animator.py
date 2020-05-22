@@ -1,3 +1,5 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from NeutronGame.neutron_util import get_time_miliseconds
 from NeutronGame.gui_utils import get_piece_coords_from_board_coords

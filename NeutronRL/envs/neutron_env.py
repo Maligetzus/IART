@@ -16,7 +16,7 @@ class NeutronEnv(gym.Env):
         self.opponent = opponent
         self.board_type = board_type
         self.render_mode = RenderMode.Ascii
-        self.game = Neutron(self.board_type, curr_player=player, render_mode=self.render_mode)
+        self.game = Neutron(self.board_type, render_mode=self.render_mode)
         self.observation_space = gym.spaces.Box(low=0, high=3, shape=(self.game.size, self.game.size), dtype=np.int32)
         self.action_space = gym.spaces.Box(low=np.array([0, 0, 0]), high=np.array([7, 4, 7]), dtype=np.int32)
         
@@ -36,6 +36,7 @@ class NeutronEnv(gym.Env):
 
     def step(self, action):
         success_play = True
+        ended = False
 
         if self.game.curr_player == self.player:
             if self.game.turn == Turn.Neutron:
@@ -43,7 +44,10 @@ class NeutronEnv(gym.Env):
 
                 success_play = self.game.move_piece(neutron_pos[0], neutron_pos[1], Direction(action[0]))
 
-            if success_play:
+                if success_play:
+                    ended, winner = self.game.has_finished()
+
+            if success_play and not ended:
                 state = self.game.state
 
                 pawn_coor_x = -1
@@ -64,10 +68,15 @@ class NeutronEnv(gym.Env):
 
                 success_play = self.game.move_piece(pawn_coor_x, pawn_coor_y, Direction(action[2]))
 
+        if success_play:
+            self.__log__(f"Player play successful: neutron {Direction(action[0]).name} and pawn num {action[1]} {Direction(action[2]).name}")
+        else:
+            self.__log__("Player play failed")
+
         ended, winner = self.game.has_finished()
 
         if success_play and not ended:
-            self.__log__("Opponent play")
+            self.__log__("Opponent will play")
 
             if self.opponent == Opponent.Random:
                 self.__random_play__()
@@ -125,65 +134,72 @@ class NeutronEnv(gym.Env):
         return tuple((res).astype(int))
 
     def __random_play__(self):
-        success_play = False
-
-        self.__log__("Will move neutron")
+        success_play = True
 
         if self.game.turn == Turn.Neutron:
+            success_play = False
+            self.__log__("\tBot will move neutron")
+            
+            neutron_move = None
             neutron_pos = self.game.neutron_position
 
             while not success_play:
-                success_play = self.game.move_piece(neutron_pos[0], neutron_pos[1], Direction(random.randint(0,7)))
+                neutron_move = Direction(random.randint(0,7))
+                success_play = self.game.move_piece(neutron_pos[0], neutron_pos[1], neutron_move)
 
-        self.__log__("Neutron moved")
+            self.__log__(f"\tBot moved neutron ({neutron_move.name})")
 
         state = self.game.state
         pawn = Tile.Black if self.player == Player.White else Tile.White
 
-        self.__log__("Will move piece")
+        if success_play:
 
-        while not success_play:
-            pawn_coor_x = -1
-            pawn_coor_y = -1
-            pawn_num = random.randint(0,4)
+            success_play = False
 
-            counter = -1
+            pawn_move = None
+            pawn_num = None
 
-            for i in range(len(state)):
-                for j in range(len(state[i])):
-                    if state[i][j] == pawn:
-                        counter += 1
+            self.__log__("\tBot will move piece")
 
-                        if counter == pawn_num:
-                            pawn_coor_x = i
-                            pawn_coor_y = j
+            while not success_play:
 
-            success_play = self.game.move_piece(pawn_coor_x, pawn_coor_y, Direction(random.randint(0,7)))
+                pawn_coor_x = -1
+                pawn_coor_y = -1
+                pawn_num = random.randint(0,4)
+
+                counter = -1
+
+                for i in range(len(state)):
+                    for j in range(len(state[i])):
+                        if state[i][j] == pawn:
+                            counter += 1
+
+                            if counter == pawn_num:
+                                pawn_coor_x = i
+                                pawn_coor_y = j
+
+                pawn_move = Direction(random.randint(0,7))
+                success_play = self.game.move_piece(pawn_coor_x, pawn_coor_y, pawn_move)
         
-        self.__log__("Piece moved")
+            self.__log__(f"\tBot moved piece (num {pawn_num}, {pawn_move.name})")
 
     def __easy_play__(self):
         success_play = False
 
         neutronMove, pawnCoord, pawnMove = get_next_move(self.game, 1, 2)
 
-        if pawnCoord == None:
-            print("FUCK")
-
         self.__log__("Will move neutron")
 
         if self.game.turn == Turn.Neutron:
             neutron_pos = self.game.neutron_position
 
-            while not success_play:
-                success_play = self.game.move_piece(neutron_pos[0], neutron_pos[1], neutronMove)
+            success_play = self.game.move_piece(neutron_pos[0], neutron_pos[1], neutronMove)
 
         self.__log__("Neutron moved")
 
         self.__log__("Will move piece")
 
-        while not success_play:
-            success_play = self.game.move_piece(pawnCoord[0], pawnCoord[1], pawnMove)
+        success_play = self.game.move_piece(pawnCoord[0], pawnCoord[1], pawnMove)
         
         self.__log__("Piece moved")
 
