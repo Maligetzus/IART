@@ -3,6 +3,8 @@ import gym
 import numpy as np
 import NeutronRL.envs.neutron_env
 from NeutronRL.env_algorithm import EnvAlgorithm, EpsilonDecay
+import matplotlib.pyplot as plt
+
 
 class QLearning(EnvAlgorithm):
 
@@ -63,5 +65,9 @@ class QLearning(EnvAlgorithm):
         score = sum(rewards)/self.max_episodes
 
         print("Score over time: " + str(score))
+
+        if self.plot_rewards:
+            plt.plot(rewards)
+            plt.show()
 
         return score, rewards
