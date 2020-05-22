@@ -71,7 +71,7 @@ class NeutronEnv(gym.Env):
         if success_play:
             self.__log__(f"Player play successful: neutron {Direction(action[0]).name} and pawn num {action[1]} {Direction(action[2]).name}")
         else:
-            self.__log__("Player play failed")
+            self.__log__(f"Player play failed: neutron {Direction(action[0]).name} and pawn num {action[1]} {Direction(action[2]).name}")
 
         ended, winner = self.game.has_finished()
 

@@ -9,6 +9,7 @@ class QLearning(EnvAlgorithm):
 
     def train(self):
         epsilon = self.starting_epsilon
+        aux_expsilon = epsilon
         rewards = []
 
         for current_episode in range(self.max_episodes):
@@ -55,9 +56,12 @@ class QLearning(EnvAlgorithm):
 
             # Reduce epsilon (because we need less and less exploration)
             if self.epsilon_decay == EpsilonDecay.Exponential:
-                epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon) * np.exp(-self.decay_rate * current_episode)
-            elif self.epsilon_decay == EpsilonDecay.Linear:
-                epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon) * (-self.decay_rate * current_episode)
+                epsilon = self.ending_epsilon + (self.starting_epsilon - self.ending_epsilon) * np.exp(-self.decay_rate * current_episode)
+            elif self.epsilon_decay == EpsilonDecay.Linear and aux_expsilon > 0:
+                aux_expsilon = self.starting_epsilon + (self.starting_epsilon - self.ending_epsilon) * (-self.decay_rate * current_episode)
+
+                if aux_expsilon > 0:
+                    epsilon = aux_expsilon
 
             rewards.append(total_rewards)
 

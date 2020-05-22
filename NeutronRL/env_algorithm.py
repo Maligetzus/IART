@@ -17,9 +17,8 @@ class EnvAlgorithm():
                 learning_rate=0.8,
                 max_steps=99,
                 gamma=0.95,
-                starting_epsilon=0.1,
-                max_epsilon=1.0,
-                min_epsilon=0.01,
+                starting_epsilon=0.9,
+                ending_epsilon=0.01,
                 decay_rate=0.001,
                 epsilon_decay=EpsilonDecay.Exponential,
                 render=False,
@@ -52,8 +51,7 @@ class EnvAlgorithm():
 
         # Exploration
         self.starting_epsilon = starting_epsilon
-        self.max_epsilon = max_epsilon
-        self.min_epsilon = min_epsilon
+        self.ending_epsilon = ending_epsilon
         self.decay_rate = decay_rate
         self.epsilon_decay = epsilon_decay
     
