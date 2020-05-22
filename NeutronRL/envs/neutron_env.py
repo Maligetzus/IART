@@ -152,7 +152,9 @@ class NeutronEnv(gym.Env):
         state = self.game.state
         pawn = Tile.Black if self.player == Player.White else Tile.White
 
-        if success_play:
+        ended, winner = self.game.has_finished()
+
+        if success_play and not ended:
 
             success_play = False
 
@@ -197,11 +199,14 @@ class NeutronEnv(gym.Env):
 
         self.__log__("Neutron moved")
 
-        self.__log__("Will move piece")
+        ended, winner = self.game.has_finished()
 
-        success_play = self.game.move_piece(pawnCoord[0], pawnCoord[1], pawnMove)
+        if not ended:
+            self.__log__("Will move piece")
+
+            success_play = self.game.move_piece(pawnCoord[0], pawnCoord[1], pawnMove)
         
-        self.__log__("Piece moved")
+            self.__log__("Piece moved")
 
     def __log__(self, text, end="\n"):
         if self.log:
