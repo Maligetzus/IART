@@ -17,11 +17,11 @@ python main.py
 
 On the main menu, you can select the players and the size of the board. 
 
-![Main menu](resources/screenshot1.JPG "Main Menu")
+![Main menu](NeutronGame/resources/screenshot1.JPG "Main Menu")
 
 During the game (if there is a human player) you can control the pieces, during your turn, by clicking and holding on the piece you want to move and sliding it in the desired direction.
 
-![Game screenshot](resources/screenshot2.JPG "Game screenshot")
+![Game screenshot](NeutronGame/resources/screenshot2.JPG "Game screenshot")
 
 ## Bots
 
