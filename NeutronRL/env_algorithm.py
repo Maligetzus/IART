@@ -24,11 +24,9 @@ class EnvAlgorithm():
                 epsilon_decay=EpsilonDecay.Exponential,
                 render=False,
                 log=True,
-                log_detail=False,
-                plot_rewards=False):
+                log_detail=False):
 
         self.render = render
-        self.plot_rewards = plot_rewards
 
         self.env = gym.make(env)
 
