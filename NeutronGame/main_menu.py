@@ -1,4 +1,6 @@
 import pathlib
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame, sys
 from pygame import Surface
 from pygame.locals import *
