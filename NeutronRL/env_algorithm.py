@@ -12,7 +12,7 @@ class EpsilonDecay(Enum):
 class EnvAlgorithm():
 
     def __init__(self,
-                env="Neutron-5x5-White-Easy-v0",
+                env="Neutron-5x5-White-Random-v0",
                 max_episodes=100,
                 learning_rate=0.8,
                 max_steps=99,

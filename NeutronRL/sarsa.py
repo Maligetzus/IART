@@ -39,11 +39,22 @@ class SARSA(EnvAlgorithm):
                 if new_state not in self.qtable:
                     self.qtable[new_state] = np.zeros(self.action_size)
 
-                new_action_ind, new_action = self.__get_action__(epsilon, state)
+                aux_reward = -100
+                new_action_ind = -1
+                new_action = None
 
-                self.qtable[state][action_ind] = self.qtable[state][action_ind] + self.learning_rate * (reward + self.gamma * self.qtable[new_state][new_action_ind] - self.qtable[state][action_ind])
+                while aux_reward == -100:
+                    new_action_ind, new_action = self.__get_action__(epsilon, state)
+                
+                    aux_reward = self.qtable[new_state][new_action_ind]
 
-                total_rewards += reward
+                if reward != -100:
+                    self.qtable[state][action_ind] = self.qtable[state][action_ind] + self.learning_rate * (reward + self.gamma * self.qtable[new_state][new_action_ind] - self.qtable[state][action_ind])
+
+                    total_rewards += reward
+                else:
+                    self.qtable[state][action_ind] = reward
+
                 state = new_state
                 action_ind = new_action_ind
                 action = new_action

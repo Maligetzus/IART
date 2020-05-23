@@ -46,9 +46,13 @@ class QLearning(EnvAlgorithm):
                 if new_state not in self.qtable:
                     self.qtable[new_state] = np.zeros(self.action_size)
 
-                self.qtable[state][action_ind] = self.qtable[state][action_ind] + self.learning_rate * (reward + self.gamma * np.max(self.qtable[new_state]) - self.qtable[state][action_ind])
+                if reward != -100:
+                    self.qtable[state][action_ind] = self.qtable[state][action_ind] + self.learning_rate * (reward + self.gamma * np.max(self.qtable[new_state]) - self.qtable[state][action_ind])
 
-                total_rewards += reward
+                    total_rewards += reward
+                else:
+                    self.qtable[state][action_ind] = reward
+
                 state = new_state
 
                 if self.render:

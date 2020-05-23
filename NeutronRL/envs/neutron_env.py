@@ -95,9 +95,15 @@ class NeutronEnv(gym.Env):
             else:
                 reward = -1
         else:
-            reward = 0
+            if success_play:
+                reward = 0
+            else:
+                reward = -100
 
         done = ended
+
+        if done:
+            print("YES, IT'S TRUE")
 
         return obs, reward, done, {}
 
