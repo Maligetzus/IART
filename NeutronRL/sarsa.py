@@ -8,11 +8,14 @@ from NeutronRL.env_algorithm import EnvAlgorithm, EpsilonDecay
 class SARSA(EnvAlgorithm):
 
     def train(self):
+        invalid_episodes = 0
         epsilon = self.starting_epsilon
         aux_expsilon = epsilon
         rewards = []
+        epsilons = []
 
         for current_episode in range(self.max_episodes):
+            epsilons.append(epsilon)
             if self.log:
                 print(f"Episode {current_episode}")
 
@@ -57,17 +60,22 @@ class SARSA(EnvAlgorithm):
             elif self.epsilon_decay == EpsilonDecay.Linear and aux_expsilon > 0:
                 aux_expsilon = self.starting_epsilon + (self.starting_epsilon - self.ending_epsilon) * (-self.decay_rate * current_episode)
 
-                if aux_expsilon > 0:
-                    epsilon = aux_expsilon
+                if self.starting_epsilon > self.ending_epsilon:
+                    if aux_expsilon > self.ending_epsilon:
+                        epsilon = aux_expsilon
+                else:
+                    if aux_expsilon < self.ending_epsilon:
+                        epsilon = aux_expsilon
 
             if total_rewards == 0:
+                invalid_episodes += 1
             rewards.append(total_rewards)
 
-        score = sum(rewards)/self.max_episodes
+        score = sum(rewards)/(self.max_episodes - invalid_episodes)
 
         print("Score over time: " + str(score))
 
-        return score, rewards
+        return score, rewards, epsilons
 
     def __get_action__(self, epsilon, state):
         exp_exp_tradeoff = random.uniform(0, 1)
