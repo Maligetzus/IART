@@ -102,9 +102,6 @@ class NeutronEnv(gym.Env):
 
         done = ended
 
-        if done:
-            print("YES, IT'S TRUE")
-
         return obs, reward, done, {}
 
     def render(self, mode='human', close=False):

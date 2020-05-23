@@ -65,8 +65,8 @@ class EnvPlay():
             
             new_state, reward, done, info = env.step(action)
 
-            if done:
-                print("IT'S TRUE")
+            if "TimeLimit.truncated" in info:
+                done = not info["TimeLimit.truncated"]
 
             if learn and reward == -100:
                 self.qtable[state][action_ind] = reward
