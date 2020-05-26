@@ -9,6 +9,8 @@ class EpsilonDecay(Enum):
     Linear = "linear"
     NoDecay = "none"
 
+# Base algorithm class
+# Contains all parameters
 class EnvAlgorithm():
 
     def __init__(self,
@@ -22,7 +24,7 @@ class EnvAlgorithm():
                 decay_rate=0.001,
                 epsilon_decay=EpsilonDecay.Exponential,
                 render=False,
-                log=True,
+                log=False,
                 log_detail=False,
                 print_final_score=True):
 
@@ -38,6 +40,7 @@ class EnvAlgorithm():
 
         self.action_size = 1
 
+        # Calculates action size
         for num in action_size_aux:
             self.action_size *= num
 
