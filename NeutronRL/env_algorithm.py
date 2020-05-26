@@ -23,7 +23,8 @@ class EnvAlgorithm():
                 epsilon_decay=EpsilonDecay.Exponential,
                 render=False,
                 log=True,
-                log_detail=False):
+                log_detail=False,
+                print_final_score=True):
 
         self.render = render
 
@@ -31,6 +32,7 @@ class EnvAlgorithm():
 
         self.env.set_logging(log_detail)
         self.log = log
+        self.print_final_score = print_final_score
 
         action_size_aux = tuple((self.env.action_space.high - self.env.action_space.low + np.ones(self.env.action_space.shape)).astype(int))
 

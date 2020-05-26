@@ -10,7 +10,7 @@ class EnvPlay():
     def __init__(self, qtable=None):
         self.qtable = qtable
 
-    def play_multiple(self, env="Neutron-5x5-White-Random-v0", num_games=10, max_plays=2000, learn=False, log=False, log_games=False):
+    def play_multiple(self, env="Neutron-5x5-White-Random-v0", num_games=10, max_plays=2000, learn=False, log=False, log_results=True, log_games=False):
         unfinished = 0
         victories = 0
         defeats = 0
@@ -19,7 +19,7 @@ class EnvPlay():
             if log:
                 print(f"Game {game + 1}")
 
-            finished, victory = self.play(env, max_plays, learn, log_games)
+            finished, victory = self.play(env, max_plays, learn, log_games, log_results)
 
             if finished:
                 if victory:
@@ -31,7 +31,7 @@ class EnvPlay():
 
         return victories, defeats, unfinished
 
-    def play(self, env="Neutron-5x5-White-Random-v0", max_plays=2000, learn=False, log=False):
+    def play(self, env="Neutron-5x5-White-Random-v0", max_plays=2000, learn=False, log=False, log_result=True):
         if self.qtable == None:
             return False, False
 
@@ -79,17 +79,20 @@ class EnvPlay():
                 
                 if reward == 1:
                     victory = True
-                    print("Victory! ", end="")
+                    if log_result:
+                        print("Victory! ", end="")
                 else:
                     victory = False
-                    print("Defeat! ", end="")
+                    if log_result:
+                        print("Defeat! ", end="")
 
-                print("Number of steps: ", step)
+                if log_result:
+                    print("Number of steps: ", step)
                 break
 
             state = new_state
 
-        if not finished:
+        if not finished and log_result:
             print("Didn't finish the game")
 
         return finished, victory

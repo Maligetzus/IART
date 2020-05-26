@@ -84,7 +84,8 @@ class SARSA(EnvAlgorithm):
 
         score = sum(rewards)/(self.max_episodes - invalid_episodes)
 
-        print("Score over time: " + str(score))
+        if self.print_final_score:
+            print("Score over time: " + str(score))
 
         return score, rewards, epsilons
 
